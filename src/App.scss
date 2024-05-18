@@ -1,0 +1,46 @@
+/* ----------------------------------------------------------------------------
+Information Contained Herein is Proprietary and Confidential. copyright notice in all copies, 
+acknowledging that the code is provided without warranties, and strictly prohibiting unauthorized 
+sharing or distribution without prior written consent from the copyright holder<DKG Labs Pvt. Ltd>
+------------------------------------------------------------------------------ */
+
+.app {
+  background-color: #f2f2f2;
+}
+
+
+.navbar {
+  background-color: #2196f3;
+}
+
+.navbar-title {
+  flex-grow: 1;
+}
+
+
+
+.dsa-form-component {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+
+  margin-bottom: 16px;
+
+  .dsa-form-input {
+    margin-bottom: 16px;
+    width: 300px;
+  }
+
+  .dsa-form-submit-button {
+   width: 5rem;
+  }
+}
+
+
+.summary-card {
+  transition: background-color 0.3s;
+}
+
+.summary-card.clicked {
+  background-color: lightgray; 
+}
