@@ -36,12 +36,13 @@ export const rejectNbfcLoanSuccess = () => ({
 });
 
 export const fetchSpecificNbfcLoans = () => {
+  const userId = localStorage.getItem("userId")
   return async (dispatch: Dispatch) => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
         const response = await axios.get(
-          "https://finle-api-gateway.azurewebsites.net/admin-service/getLoanRequestDetail?nbfcId=50000002",
+          `https://finle-api-gateway.azurewebsites.net/admin-service/getLoanRequestDetail?nbfcId=${userId}`,
           {
             headers: {
               Authorization: token,
