@@ -25,3 +25,13 @@ code {
   z-index: 1000;
 }
 
+.hide-comp{
+  opacity: 0;
+}
+
+/* @media print {
+  .hide-comp{
+    display: none !important;
+  }
+} */
+

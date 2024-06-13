@@ -14,6 +14,7 @@ interface NBFCFormProps {
 }
 
 const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
+  console.log("NBFC: ", nbfc)
   const [formValues, setFormValues] = useState<NBFC>({
     nbfcId: nbfc ? nbfc.nbfcId : "",
     firstName: nbfc ? nbfc.firstName : "",
@@ -23,12 +24,12 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
     addressLineSecond: nbfc ? nbfc.addressLineSecond : "",
     city: nbfc ? nbfc.city : "",
     state: nbfc ? nbfc.state : "",
-    pincode: nbfc ? nbfc.pincode : "",
+    pinCode: nbfc ? nbfc.pinCode : "",
     mobile: nbfc ? nbfc.mobile : "",
     phone: nbfc ? nbfc.phone : "",
     email: nbfc ? nbfc.email : "",
     lat: nbfc ? nbfc.lat : 0,
-    lang: nbfc ? nbfc.lang : 0,
+    lng: nbfc ? nbfc.lng : 0,
     isActive: nbfc ? nbfc.isActive : "",
   });
 
@@ -39,6 +40,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+    console.log("FOrmvalue: ", formValues)
     onSubmit(formValues);
   };
 
@@ -122,8 +124,8 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         label="Pincode"
         variant="outlined"
         size="small"
-        name="pincode"
-        value={formValues.pincode}
+        name="pinCode"
+        value={formValues.pinCode}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -182,9 +184,9 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         label="Longitude"
         variant="outlined"
         size="small"
-        name="lang"
+        name="lng"
         type="number"
-        value={formValues.lang}
+        value={formValues.lng}
         onChange={handleChange}
         className="dsa-form-input"
       />

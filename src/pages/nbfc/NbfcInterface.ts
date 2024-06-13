@@ -14,11 +14,11 @@ export interface NBFC {
   addressLineSecond: string;
   city: string;
   state: string;
-  pincode: string;
+  pinCode: string;
   mobile: string;
   phone: string;
   email: string;
   lat: number;
-  lang: number;
+  lng: number;
   isActive: string;
 }

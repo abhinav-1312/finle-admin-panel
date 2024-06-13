@@ -17,9 +17,10 @@ interface NbfcLoan {
 }
 
 export interface NbfcLoans {
-  pendingList: NbfcLoan[];
-  approvedList: NbfcLoan[];
-  rejectedList: NbfcLoan[];
+  pendingList?: NbfcLoan[];
+  approvedList?: NbfcLoan[];
+  rejectedList?: NbfcLoan[];
+  adminList?: NbfcLoan[];
 }
 
 export const fetchNbfcLoans = (nbfcLoans: NbfcLoans) => ({
@@ -37,32 +38,81 @@ export const rejectNbfcLoanSuccess = () => ({
 
 export const fetchSpecificNbfcLoans = () => {
   const userId = localStorage.getItem("userId")
-  return async (dispatch: Dispatch) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const response = await axios.get(
-          `https://finle-api-gateway.azurewebsites.net/admin-service/getLoanRequestDetail?nbfcId=${userId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        const responseData = response.data.responseData;
-
-        const nbfcLoans: NbfcLoans = {
-          pendingList: responseData.csrNbfcPendingRequestList,
-          approvedList: responseData.csrNbfcApprovedRequestList,
-          rejectedList: responseData.csrNbfcRejectedRequestList,
-        };
-
-        dispatch(fetchNbfcLoans(nbfcLoans));
+  const userIdSubsStr = userId?.substring(0, 4);
+  if(userIdSubsStr === "5000"){
+    return async (dispatch: Dispatch) => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const response = await axios.get(
+            `https://finle-api-gateway.azurewebsites.net/admin-service/getLoanRequestDetail?nbfcId=${userId}`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+          const responseData = response.data.responseData;
+  
+          const nbfcLoans: NbfcLoans = {
+            pendingList: responseData.csrNbfcPendingRequestList,
+            approvedList: responseData.csrNbfcApprovedRequestList,
+            rejectedList: responseData.csrNbfcRejectedRequestList,
+          };
+  
+          dispatch(fetchNbfcLoans(nbfcLoans));
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  }
+  }
+  else if(userIdSubsStr === "6000"){
+    return async (dispatch: Dispatch) => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const response = await axios.get(
+            `https://finle-api-gateway.azurewebsites.net/user-service/allLoanDetails`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+          const responseData = response.data.responseData;
+
+          const modResData : any = responseData.map((res:any)=> {
+            return {
+              userId: res.userId,
+              loanId: res.loanId,
+              loanStatus: res.applicationCompletionStatus === "Y" ? "Completed" : "Pending",
+              nbfcId: res.nbfcId,
+              custName: res.personalDetails.name,
+              adhaarNo: res.documentDetails.aadhaarNo,
+              panNo: res.documentDetails.panNo,
+              annualIncome: res.incomeDetails.annualIncome || "No data available",
+              accHolderName: res.bankDetails.accHolderName,
+              loanReqAmt: res.loanDetail.loanRequestAmt
+            }
+          })
+
+          console.log("Mod res daaa: ", modResData)
+  
+          const nbfcLoans: NbfcLoans = {
+            adminList: modResData,
+            // pendingList: modResData,
+            // approvedList: modResData,
+            // rejectedList: modResData,
+          };
+  
+          dispatch(fetchNbfcLoans(nbfcLoans));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+  }
+  }
 };
 // ... (other imports)
 

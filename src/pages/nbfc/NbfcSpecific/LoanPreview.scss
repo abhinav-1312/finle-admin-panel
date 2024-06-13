@@ -19,6 +19,13 @@ sharing or distribution without prior written consent from the copyright holder<
   }
 }
 
+@media print {
+  .hide-comp{
+    display: none !important;
+  }
+}
+
+
 .section {
   margin-bottom: 2rem;
 

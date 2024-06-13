@@ -43,10 +43,10 @@ const LoanTable: React.FC<LoanTableProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const reversedLoanList = loanList.slice().reverse();
+  const reversedLoanList = loanList?.slice().reverse();
 
   const handleLoanClick = (loanId: string, userId: string) => {
-    navigate(`/loan-details?loanId=${loanId}&userId=${userId}`);
+      navigate(`/loan-details?loanId=${loanId}&userId=${userId}`);
   };
 
   const columns: GridColDef[] = [
@@ -118,7 +118,34 @@ const LoanTable: React.FC<LoanTableProps> = ({
     },
   ];
 
-  const rows = reversedLoanList.map((loan) => ({
+  const adminColumn : GridColDef[] = [
+    {
+      field: "loanId",
+      headerName: "Loan ID",
+      width: 150,
+      renderCell: (params) => (
+        <Button
+          variant="text"
+          color="inherit"
+          sx={{ background: "#dcdcdc" }}
+        >
+          {params.row.loanId}
+        </Button>
+      ),
+    },
+    { field: "nbfcId", headerName: "NBFC ID", width: 150 },
+    { field: "userId", headerName: "User ID", width: 150 },
+    { field: "loanStatus", headerName: "Loan Status", width: 150 }, 
+    { field: "custName", headerName: "Name", width: 150 }, 
+    { field: "annualIncome", headerName: "Annual Income", width: 150 }, 
+    { field: "panNo", headerName: "PAN No.", width: 150 }, 
+    { field: "adhaarNo", headerName: "Adhaar No.", width: 150 }, 
+    { field: "accHolderName", headerName: "Account Holder Name", width: 150 }, 
+    { field: "loanReqAmt", headerName: "Loan Request Amount", width: 150 }, 
+
+  ]
+
+  const rows = reversedLoanList?.map((loan) => ({
     id: loan.loanId,
     ...loan,
   }));
@@ -137,7 +164,7 @@ const LoanTable: React.FC<LoanTableProps> = ({
           <div style={{ height: "auto", width: "100%" }}>
             <DataGrid
               rows={rows}
-              columns={columns}
+              columns={title === "Admin List" ? adminColumn : columns}
               getRowId={(row) => row.id}
               initialState={{
                 pagination: {
@@ -145,7 +172,7 @@ const LoanTable: React.FC<LoanTableProps> = ({
                 },
                 columns: {
                   columnVisibilityModel: {
-                    nbfcId: false,
+                    nbfcId: title === "Admin List" ? true : false,
                     remarks: false,
                   },
                 },

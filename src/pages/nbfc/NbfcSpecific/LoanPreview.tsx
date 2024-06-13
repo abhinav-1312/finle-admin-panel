@@ -6,8 +6,9 @@ sharing or distribution without prior written consent from the copyright holder<
 
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-redeclare */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useReactToPrint } from 'react-to-print';
 import axios from "axios";
 import {
   Typography,
@@ -39,7 +40,7 @@ const Section: React.FC<SectionProps> = ({ title, fields }) => (
       {title}
     </Typography>
     <Divider />
-    {fields.map((field, index) => (
+    {fields?.map((field, index) => (
       <Box className="field" key={index}>
         <Typography variant="body1" component="span">
           {field.label}:
@@ -69,10 +70,11 @@ const Field: React.FC<FieldProps> = ({ label, value }) => (
 );
 
 const LoanPreview: React.FC = () => {
+  const componentRef = useRef(null)
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const loanId = searchParams.get("loanId");
-  const userId = searchParams.get("userId");
+  const userId = searchParams?.get("userId");
   const [loanDetails, setLoanDetails] = useState<any>(null);
   const [evScore, setEvScore] = useState<any>(null);
   const [downloadFormat, setDownloadFormat] = useState<string>("html");
@@ -122,7 +124,7 @@ const LoanPreview: React.FC = () => {
           headers: auth,
         }
       );
-      setEvScore(response.data.responseData);
+      setEvScore(response?.data?.responseData);
     } catch (error) {
       console.error(error);
     }
@@ -167,9 +169,9 @@ const LoanPreview: React.FC = () => {
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const handleDownload = () => {
     const element = document.getElementById("loan-details-container");
@@ -280,15 +282,15 @@ const LoanPreview: React.FC = () => {
   ];
 
   const contactDetailsFields: Field[] = [
-    { label: "User Id", value: evScore.userId || "N/A" },
-    { label: "Loan Id", value: evScore.loanId || "N/A" },
+    { label: "User Id", value: evScore?.userId || "N/A" },
+    { label: "Loan Id", value: evScore?.loanId || "N/A" },
     {
       label: "Ev Score",
-      value: evScore.evScore || "N/A",
+      value: evScore?.evScore || "N/A",
     },
     {
       label: "Ev Score Time ",
-      value: evScore.evScoreDateTime || "N/A",
+      value: evScore?.evScoreDateTime || "N/A",
     },
     {
       label: "Phone Number",
@@ -332,20 +334,23 @@ const LoanPreview: React.FC = () => {
   };
 
   return (
-    <div>
+    <div ref={componentRef}>
       <Card>
         <CardContent>
+          <div className="hide-comp">
+
           <Button
             variant="outlined"
             color="warning"
             component={Link}
             to="/NbfcLoanDetails"
-          >
+            >
             Go back
           </Button>
-          <div className="buttons-container">
+            </div>
+          <div className="buttons-container hide-comp">
             <Button onClick={handlePrint}>Print</Button>
-            <select
+            {/* <select
               value={downloadFormat}
               onChange={(e) => setDownloadFormat(e.target.value)}
             >
@@ -354,13 +359,13 @@ const LoanPreview: React.FC = () => {
               <option value="png">PNG</option>
               <option value="jpeg">JPEG</option>
             </select>
-            <Button onClick={handleDownload}>Download</Button>
+            <Button onClick={handleDownload}>Download</Button> */}
           </div>
           <div className="nbfcEvscore">
             {" "}
             {loanDetails.personalDetails.name} EV Score :-{" "}
-            <span className={getEvScoreColorClass(evScore.evScore)}>
-              {evScore.evScore}
+            <span className={getEvScoreColorClass(evScore?.evScore)}>
+              {evScore?.evScore}
             </span>
           </div>
 
@@ -423,7 +428,7 @@ const LoanPreview: React.FC = () => {
               </Typography>
               <Divider />
               <Grid container spacing={2}>
-                {loanDetails.documentDetails.uploadedDocDetailsDtoList.map(
+                {loanDetails?.documentDetails?.uploadedDocDetailsDtoList?.map(
                   (doc: any, index: number) => (
                     <Grid item xs={6} key={index}>
                       <Box>
