@@ -164,7 +164,7 @@ const LoanTable: React.FC<LoanTableProps> = ({
           <div style={{ height: "auto", width: "100%" }}>
             <DataGrid
               rows={rows}
-              columns={title === "Admin List" ? adminColumn : columns}
+              columns={title === "Loan Queue" ? adminColumn : columns}
               getRowId={(row) => row.id}
               initialState={{
                 pagination: {
@@ -172,7 +172,7 @@ const LoanTable: React.FC<LoanTableProps> = ({
                 },
                 columns: {
                   columnVisibilityModel: {
-                    nbfcId: title === "Admin List" ? true : false,
+                    nbfcId: title === "Loan Queue" ? true : false,
                     remarks: false,
                   },
                 },

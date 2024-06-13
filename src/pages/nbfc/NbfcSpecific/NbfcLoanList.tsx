@@ -97,11 +97,11 @@ const NbfcLoanList: React.FC = () => {
       <div>
 
       <Tabs value={selectedTab} onChange={handleTabChange}>
-        <Tab label="Admin List" />
+        <Tab label="Loan Queue" />
       </Tabs>
 
       <LoanTable
-          title="Admin List"
+          title="Loan Queue"
           loanList={adminList}
           handleOpen={handleOpen}
           showApproveButton={false}
@@ -207,7 +207,7 @@ const NbfcLoanList: React.FC = () => {
       )}
       {selectedTab === 3 && (
         <LoanTable
-          title="Admin List"
+          title="Loan Queue"
           loanList={adminList}
           handleOpen={handleOpen}
           showApproveButton={true}
