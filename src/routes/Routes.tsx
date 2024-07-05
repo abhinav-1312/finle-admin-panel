@@ -30,6 +30,9 @@ import QueUser from "../pages/consumer/QueUser";
 import DealerDocUpload from "../pages/dealer/DealerDashboard/DelearStepperForm/DealerDocUpload";
 import Collection from "../pages/collectionDashboard/collection";
 import QueUserDetails from "../components/common/QueUserDetails";
+import ConsumerDetail from "../pages/consumer/ConsumerDetail";
+import NbfcDetail from "../pages/nbfc/NbfcDetail";
+import DealerDetail from "../pages/dealer/DealerDetail";
 
 const AppRoutes: React.FC = () => {
   const [userRole, setUserRole] = useState<number[]>([]);
@@ -103,6 +106,10 @@ const AppRoutes: React.FC = () => {
           element={userRole.includes(3) ? <ManageNbfc /> : <PrivatePage />}
         />
         <Route
+          path="/nbfc/:nbfcId"
+          element={userRole.includes(3) ? <NbfcDetail /> : <PrivatePage />}
+        />
+        <Route
           path="/dealer"
           element={userRole.includes(4) ? <ManageDealer /> : <PrivatePage />}
         />
@@ -114,6 +121,7 @@ const AppRoutes: React.FC = () => {
           path="/consumer"
           element={userRole.includes(6) ? <ConsumerTable /> : <PrivatePage />}
         />
+        <Route path = "/consumer/:userId" element={userRole.includes(6) ? <ConsumerDetail /> : <PrivatePage />} />
         <Route
           path="/gp"
           element={userRole.includes(7) ? <GP /> : <Navigate to="/" />}
@@ -171,6 +179,10 @@ const AppRoutes: React.FC = () => {
         <Route
           path="/userDetails/:mobileNo"
           element={userRole.includes(1) ? <QueUserDetails /> : <PrivatePage />}
+        />
+        <Route
+          path="/dealer/:dealerId"
+          element={userRole.includes(4) ? <DealerDetail /> : <PrivatePage />}
         />
       </Routes>
     </>

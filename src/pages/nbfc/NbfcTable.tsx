@@ -6,9 +6,10 @@ sharing or distribution without prior written consent from the copyright holder<
 
 import React from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { Edit, Delete, Block, CheckCircle } from "@mui/icons-material";
 import { NBFC } from "./NbfcInterface";
+import { useNavigate } from "react-router-dom";
 
 interface NBFCTableProps {
   nbfcList: NBFC[];
@@ -28,10 +29,35 @@ const NBFCTable: React.FC<NBFCTableProps> = ({
     ...nbfc,
   }));
 
+  const navigate = useNavigate()
+
+  const handleNbfcIdClick = (nbfcId: any) => {
+    navigate(`/nbfc/${nbfcId}`)
+  }
+
   const columns: GridColDef[] = [
-    { field: "nbfcId", headerName: "ID", width: 100 },
-    { field: "firstName", headerName: "First Name", width: 150 },
-    { field: "lastName", headerName: "Last Name", width: 150 },
+    { field: "nbfcId", headerName: "ID", width: 100,
+      renderCell: (params) => (
+        <Button
+          variant="text"
+          color="inherit"
+          sx={{ background: "#dcdcdc" }}
+          onClick={() =>
+            handleNbfcIdClick(
+              params.row.nbfcId
+            )
+          }
+        >
+          {params.row.nbfcId}
+        </Button>
+      )
+     },
+    { 
+      field: "name",
+      headerName: "Name",
+      width: 250,
+      renderCell: (params) => params.row.firstName + " " + params.row.lastName
+    },
     { field: "mgrName", headerName: "MgrName", width: 150 },
     { field: "addressLineFirst", headerName: "AdrLine1", width: 200 },
     { field: "addressLineSecond", headerName: "AdrLine2", width: 200 },

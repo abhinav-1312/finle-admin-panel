@@ -8,8 +8,9 @@ sharing or distribution without prior written consent from the copyright holder<
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { BASE_URL, TOKEN } from "../../utils/BaseUrl";
-import { Card, CardContent, TextField } from "@mui/material";
+import { Button, Card, CardContent, TextField } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ConsumerTable = () => {
   const [users, setUsers] = useState([]);
@@ -44,6 +45,12 @@ const ConsumerTable = () => {
     fetchUsers();
   }, []);
 
+  const navigate = useNavigate()
+
+  const handleUserDetailClick = (userId) => {
+    navigate(`/consumer/${userId}`)
+  }
+
   const filteredUsers = searchTerm
     ? users.filter((user) =>
       Object.values(user).some(
@@ -56,16 +63,31 @@ const ConsumerTable = () => {
     : users;
 
   const columns = [
-    { field: "userId", headerName: "User ID", width: 150 },
+    { field: "userId", headerName: "User ID", width: 150,
+      renderCell: (params) => (
+        <Button
+          variant="text"
+          color="inherit"
+          sx={{ background: "#dcdcdc" }}
+          onClick={() =>
+            handleUserDetailClick(
+              params.row.userId
+            )
+          }
+        >
+          {params.row.userId}
+        </Button>
+      )
+     },
     { field: "firstName", headerName: "First Name", width: 150 },
     { field: "lastName", headerName: "Last Name", width: 150 },
     // { field: "userType", headerName: "User Type", width: 150 },
     { field: "mobileNumber", headerName: "Mobile Number", width: 180 },
-    { field: "userMode", headerName: "User Mode", width: 120 },
+    // { field: "userMode", headerName: "User Mode", width: 120 },
     // { field: "createdBy", headerName: "Created By", width: 150 },
     // { field: "createdDate", headerName: "Created Date", width: 180 },
     { field: "active", headerName: "Active", width: 120 },
-    { field: "adminFlag", headerName: "Admin Flag", width: 120 },
+    // { field: "adminFlag", headerName: "Admin Flag", width: 120 },
   ];
 
   return (

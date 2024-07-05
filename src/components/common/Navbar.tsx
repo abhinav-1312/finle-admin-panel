@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { Typography, IconButton, Toolbar, Button, Box } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 interface AppBarProps extends MuiAppBarProps {
   handleDrawerOpen: () => void;
@@ -17,7 +18,9 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  // width: `90%`,
   width: `calc(100% - ${drawerWidth}px)`,
+  // marginLeft: `${10}px`,
   marginLeft: `${drawerWidth}px`,
 }));
 
@@ -53,6 +56,7 @@ const Navbar: React.FC<AppBarProps> = ({ handleDrawerOpen, drawerWidth }) => {
             sx={{ mr: 2 }}
           >
             <MenuIcon />
+            {/* <DragHandleIcon /> */}
           </IconButton>
 
           <Typography

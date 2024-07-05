@@ -11,14 +11,16 @@ interface SummaryCardProps {
   title: string;
   value: any;
   isActive: boolean;
+  tileColor: string;
   onClick: () => void;
 }
 
-const SummaryCard: React.FC<SummaryCardProps> = ({ title, value, onClick, isActive }) => {
+const SummaryCard: React.FC<SummaryCardProps> = ({ title, value, onClick, isActive, tileColor }) => {
   return (
     <Card
       className={`summary-card ${isActive ? "clicked" : ""}`}
       onClick={onClick}
+      sx={{backgroundColor: tileColor, position: "relative"}}
     >
       <CardContent>
         <Typography variant="h6" gutterBottom>

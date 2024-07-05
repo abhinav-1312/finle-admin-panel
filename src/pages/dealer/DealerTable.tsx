@@ -6,9 +6,10 @@ sharing or distribution without prior written consent from the copyright holder<
 
 import React from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { Edit, Delete, Block, CheckCircle } from "@mui/icons-material";
 import { Dealer } from "./DealerInterface";
+import { useNavigate } from "react-router-dom";
 
 interface DealerTableProps {
   DlrList: Dealer[];
@@ -28,10 +29,35 @@ const DealerTable: React.FC<DealerTableProps> = ({
     ...dealer,
   }));
 
+  const navigate = useNavigate()
+
+  const handleDealerIdClick = (id: any) => {
+    navigate(`/dealer/${id}`)
+  }
+
   const columns: GridColDef[] = [
-    { field: "dealerId", headerName: "ID", width: 100 },
-    { field: "firstName", headerName: "First Name", width: 150 },
-    { field: "lastName", headerName: "Last Name", width: 150 },
+    { field: "dealerId", headerName: "ID", width: 100,
+      renderCell: (params) => (
+        <Button
+          variant="text"
+          color="inherit"
+          sx={{ background: "#dcdcdc" }}
+          onClick={() =>
+            handleDealerIdClick(
+              params.row.dealerId
+            )
+          }
+        >
+          {params.row.dealerId}
+        </Button>
+      )
+    },
+    { 
+      field: "name",
+      headerName: "Name",
+      width: 250,
+      renderCell: (params) => params.row.firstName + " " + params.row.lastName
+    },
     { field: "mgrName", headerName: "MgrName", width: 150 },
     { field: "addressLineFirst", headerName: "Adrline1", width: 200 },
     { field: "addressLineSecond", headerName: "Adrline2", width: 200 },

@@ -45,7 +45,11 @@ const QueUser = () => {
     }
   };
 
+  const [approveBtnEnabled, setApproveBtnEnabled] = useState(true)
+  const [rejBtnEnabled, setRejBtnEnabled] = useState(true)
+
   const handleApprove = async (userId, userType) => {
+    setApproveBtnEnabled(false)
     try {
       const userRemarks = prompt("Enter remarks:");
       if (userRemarks !== null) {
@@ -71,17 +75,21 @@ const QueUser = () => {
         if (response.status === 200) {
           alert("Approved successfully");
           console.log("Approval successful");
+          setApproveBtnEnabled(true)
           fetchUsers()
         } else {
           console.log("Failed to approve user:", response.status, response.statusText);
+          setApproveBtnEnabled(true)
         }
       }
     } catch (error) {
       console.error("Error during approval:", error);
+      setApproveBtnEnabled(true)
     }
   };
 
   const handleReject = async (userId, userType) => {
+    setRejBtnEnabled(false)
     try {
       const userRemarks = prompt("Enter remarks:");
       if (userRemarks !== null) {
@@ -106,13 +114,16 @@ const QueUser = () => {
         if (response.status === 200) {
           alert("Reject successfully");
           console.log("Reject successful");
+          setRejBtnEnabled(true)
           fetchUsers()
         } else {
           console.log("Failed to Reject user:", response.status, response.statusText);
+          setRejBtnEnabled(true)
         }
       }
     } catch (error) {
       console.error("Error during Reject:", error);
+      setRejBtnEnabled(true)
     }
   };
 
@@ -184,6 +195,7 @@ const QueUser = () => {
               variant="contained"
               color="success"
               onClick={() => handleApprove(params.row.userId, params.row.userType)}
+              disabled={!approveBtnEnabled}
             >
               Approve
             </Button>
@@ -193,6 +205,7 @@ const QueUser = () => {
               variant="contained"
               color="warning"
               onClick={() => handleReject(params.row.userId, params.row.userType)}
+              disabled={!rejBtnEnabled}
             >
               Reject
             </Button>
@@ -207,7 +220,7 @@ const QueUser = () => {
 
   return (
     <>
-      <h1> User  Lead Queue</h1>
+      <h1> User Lead Queue</h1>
       <Tabs value={selectedTab} onChange={handleTabChange}>
         <Tab label="Pending Users" />
         <Tab label="Approved Users" />

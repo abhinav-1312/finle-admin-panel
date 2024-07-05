@@ -110,7 +110,7 @@ const Sidebar: React.FC = () => {
             <ListItemIcon>
               <PeopleAlt />
             </ListItemIcon>
-            <ListItemText primary="Lead Queue" />
+            <ListItemText primary="Actionable Items" />
           </ListItemButton>
         </ListItem>
       )}

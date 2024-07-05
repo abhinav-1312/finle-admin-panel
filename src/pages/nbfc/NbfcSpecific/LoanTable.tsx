@@ -74,7 +74,7 @@ const LoanTable: React.FC<LoanTableProps> = ({
     { field: "userId", headerName: "User ID", width: 150 },
     { field: "loanStatus", headerName: "Loan Status", width: 150 },
     { field: "remarks", headerName: "Remarks", width: 150 },
-    { field: "createdBy", headerName: "Created By", width: 150 },
+    // { field: "createdBy", headerName: "Created By", width: 150 },
     { field: "createdDate", headerName: "Created Date", width: 150 },
     { field: "updatedDate", headerName: "Updated Date", width: 150 },
     {
