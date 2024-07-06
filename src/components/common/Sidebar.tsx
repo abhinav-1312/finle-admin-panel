@@ -26,10 +26,15 @@ import "./Layout.scss";
 
 const Sidebar: React.FC = () => {
   const [userRole, setUserRole] = useState<number[]>([]);
+  const [userType, setUserType] = useState<string>("")
   const [selectedItem, setSelectedItem] = useState("");
 
   useEffect(() => {
     const rolarr = localStorage.getItem("userRole");
+    const userType = localStorage.getItem("userType")
+    if(userType !== null){
+      setUserType(userType)
+    }
     if (rolarr !== null) {
       const parsedRolarr = JSON.parse(rolarr);
       setUserRole(parsedRolarr);
@@ -61,7 +66,7 @@ const Sidebar: React.FC = () => {
             </ListItemButton>
           </ListItem>
         )}
-        {userRole.includes(2) && (
+        {(userRole.includes(2) || userType === "Nbfc") && (
           <ListItem
             className={selectedItem === "collection" ? "highlighted" : ""}
             onClick={() => handleMenuItemClick("collection")}

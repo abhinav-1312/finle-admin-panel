@@ -95,7 +95,7 @@ const AppRoutes: React.FC = () => {
         />
         <Route
           path="/collection"
-          element={userRole.includes(2) ? <Collection /> : <PrivatePage />}
+          element={(userRole.includes(2) || userType==="Nbfc") ? <Collection /> : <PrivatePage />}
         />
         <Route
           path="/queUser"
