@@ -45,8 +45,9 @@ const userType = localStorage.getItem("userType")
 const firstName = localStorage.getItem('firstName')
 const lastName = localStorage.getItem('lastName')
 
-export const fetchSpecificNbfcLoans = () : ThunkAction<void, RootState, null, AnyAction> => {
-  return async (dispatch: Dispatch) => {  const userId = localStorage.getItem("userId")
+export const fetchSpecificNbfcLoans = () => {
+  // return async (dispatch: Dispatch) => {  
+    const userId = localStorage.getItem("userId")
   const userIdSubsStr = userId?.substring(0, 4);
   if(userIdSubsStr === "5000"){
     return async (dispatch: Dispatch) => {
@@ -76,7 +77,7 @@ export const fetchSpecificNbfcLoans = () : ThunkAction<void, RootState, null, An
       }
   }
   }
-  else if(userIdSubsStr === "6000"){
+  else if(userIdSubsStr === "6000" || userType === "admin"){
     return async (dispatch: Dispatch) => {
       try {
         const token = localStorage.getItem("token");
@@ -119,7 +120,7 @@ export const fetchSpecificNbfcLoans = () : ThunkAction<void, RootState, null, An
         console.error(error);
       }
   }
-  }
+  // }
 }
 
 };
