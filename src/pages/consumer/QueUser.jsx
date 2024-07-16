@@ -169,7 +169,7 @@ const QueUser = () => {
     { field: "lastName", headerName: "Last Name", width: 150 },
     { field: "userType", headerName: "User Type", width: 150 },
     { field: "mobileNumber", headerName: "Mobile Number", width: 180 },
-    { field: "userMode", headerName: "User Mode", width: 120 },
+    // { field: "userMode", headerName: "User Mode", width: 120 },
     //  { field: "createdBy", headerName: "Created By", width: 150 },
     { field: "createdDate", headerName: "Created Date", width: 200 },
     { field: "remarks", headerName: "Remarks", width: 150 },
