@@ -1,84 +1,47 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
+import { BASE_URL } from '../utils/BaseUrl';
 
 function PdfImgViewer({ userId, vrfCode, vrfsCode }) {
-    // const imgRef = useRef(null);
     const [url, setUrl] = useState(null)
 
-    console.log("Url: ", url, vrfsCode)
-
-    const loadPdf = async (pdfData) => {
-        console.log("Load pdf: ", pdfData)
-            try {
-                // Initialize PDF.js
-                window.pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${window.pdfjsLib.version}/pdf.worker.min.js`;
-
-                // Load PDF document
-                const loadingTask = window.pdfjsLib.getDocument({ data: pdfData });
-                const pdf = await loadingTask.promise;
-
-                // Fetch the first page
-                const pageNumber = 1;
-                const page = await pdf.getPage(pageNumber);
-
-                // Set scale for rendering
-                const scale = 1.5;
-                const viewport = page.getViewport({ scale });
-
-                // Prepare canvas using PDF page dimensions
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = "22rem";
-                canvas.width = "22rem";
-
-                // Render PDF page into canvas context
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport
-                };
-                await page.render(renderContext).promise;
-
-                // Convert canvas to base64 encoded image
-                const imageDataURL = canvas.toDataURL('image/jpeg');
-                setUrl(imageDataURL)
-            } catch (error) {
-                console.error('Error loading PDF:', pdfData);
-            }
-        };
-
-    const fetchUploadedDoc = async (userId, vrfCode, vrfsCode) => {
-        try{
-            const res = await axios.get(`https://finle-user-service.azurewebsites.net/user-service/downloadDocument?userId=${userId}&vrfCode=${vrfCode}&vrfsCode=${vrfsCode}`)
-            return res.data
-        }catch(error){
-            console.log("Error on fetching uploaded documemnt", error)
-            alert("Error on fetching uploaded documemnt")
-        }
-    }
-
     const generateImg = useCallback( async (userId, vrfCode, vrfsCode) => {
-        try{
-            const pdfData = await fetchUploadedDoc(userId, vrfCode, vrfsCode)
-            if(vrfsCode === "A703"){
-                console.log('PDF DATA: ', pdfData)
+            try {
+            //   for (const doc of documents) {
+                const token = localStorage.getItem("token");
+                const auth = {
+                  Authorization: token,
+                };
+        
+                const response = await axios.get(
+                  `${BASE_URL}/user-service/downloadDocument`,
+                  {
+                    headers: auth,
+                    params: {
+                      userId: userId,
+                      vrfCode: vrfCode,
+                      vrfsCode: vrfsCode,
+                    },
+                    responseType: "blob",
+                  }
+                );
+        
+                if (response.status === 200) {
+                  const documentBlob = new Blob([response.data], {
+                    type: "application/pdf",
+                  });
+                  const documentUrl = URL.createObjectURL(documentBlob);
+                setUrl(documentUrl)
+                } else {
+                  console.error("Document download failed:", response.status);
+                }
+            //   }
+            } catch (error) {
+              console.error("Error fetching document previews:", error);
             }
-            // const blob = new Blob([pdfData], { type: 'image/jpeg' });
-                const imageUrl = URL.createObjectURL(pdfData);
-            // const base64String = Buffer.from(pdfData).toString('base64');
-
-                // Create image data URL
-                // const imageUrl = `data:image/jpeg;base64,${base64String}`;
-                setUrl(imageUrl);
-
-            // loadPdf(pdfData)
-        }
-        catch(error){
-            console.log("Error fetching image data from server.", error)
-        }
-    }, [])
-
-    console.log("URL: ", url)
-
+        //   };
+    }
+    , [])
 
     useEffect(() => {
         if(userId && vrfCode && vrfsCode){
@@ -89,8 +52,10 @@ function PdfImgViewer({ userId, vrfCode, vrfsCode }) {
     return (
         <div style={{border: "2px solid grey", display: "flex", height: "22rem", width: "22rem", alignItems:'center', justifyContent: 'center' }}>
             {
-                url &&
-                <img src={url} alt="Uploaded document" />
+                url ? 
+                <img src={url} alt="Uploaded document" style={{height: "inherit", width: "inherit"}} />
+                : 
+                <h2>Loading...</h2>
             }
         </div>
     )

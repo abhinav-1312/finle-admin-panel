@@ -53,7 +53,7 @@ const AppRoutes: React.FC = () => {
   }, []);
 
   function getDashboardComponent() {
-    if (userType === "superAdmin") {
+    if (userType === "superAdmin" || userType === "admin") {
       return <Dashboard />;
     } else if (userType === "Delear") {
       return <DealerDashboard />;
@@ -119,7 +119,7 @@ const AppRoutes: React.FC = () => {
         />
         <Route
           path="/consumer"
-          element={userRole.includes(6) ? <ConsumerTable /> : <PrivatePage />}
+          element={(userRole.includes(6) || userRole.includes(17))  ? <ConsumerTable /> : <PrivatePage />}
         />
         <Route path = "/consumer/:userId" element={userRole.includes(6) ? <ConsumerDetail /> : <PrivatePage />} />
         <Route

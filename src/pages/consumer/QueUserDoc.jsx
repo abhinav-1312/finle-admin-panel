@@ -14,6 +14,7 @@ import { BASE_URL, TOKEN } from "../../utils/BaseUrl";
 const QueUserDoc = ({ userId }) => {
   const [uploadedFiles, setUploadedFiles] = useState({});
   const [documentInfo, setDocumentInfo] = useState([]);
+  const [submitDisabled, setSubmitDisabled] = useState(false)
   const getUserId = userId;
 
   useEffect(() => {
@@ -55,7 +56,8 @@ const QueUserDoc = ({ userId }) => {
   };
 
   const handleSubmit = async (documentType, vrfCode, vrfsCode) => {
-    const { file, vrfCode: fileVrfCode, vrfsCode: fileVrfsCode } =
+    setSubmitDisabled(true)
+    const { file } =
       uploadedFiles[documentType] || {};
 
     if (!file) {
@@ -63,19 +65,29 @@ const QueUserDoc = ({ userId }) => {
       return;
     }
 
-    const maxFileSize = 1 * 1024 * 1024;
+    const maxFileSize = 20 * 1 * 1024 * 1024; // 20MB File size
+
     if (file.size > maxFileSize) {
-      console.error(`File size exceeds the maximum limit of 1 MB`);
-      alert("File size exceeds the maximum limit of 1 MB");
+      console.error(`File size exceeds the maximum limit of 20 MB`);
+      alert("File size exceeds the maximum limit of 20 MB");
       return;
     }
 
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("userId", localStorage.getItem("userId") || "");
+      formData.append("userId", userId);
       formData.append("vrfCode", vrfCode);
       formData.append("vrfsCode", vrfsCode);
+
+      // console.log("FORMDATA: ", formData)
+
+      // const formData = {
+      //   file: file,
+      //   userId: localStorage.getItem("userId") || "",
+      //   vrfCode: vrfCode,
+      //   vrfsCode: vrfsCode
+      // }
 
       const response = await fetch(
         `${BASE_URL}/user-service/uploadDocument`,
@@ -98,7 +110,12 @@ const QueUserDoc = ({ userId }) => {
     } catch (error) {
       console.error("Error handling file:", error);
     }
+    finally{
+      setSubmitDisabled(false)
+    }
   };
+
+  console.log("Document info: ", documentInfo)
 
   return (
     <>
@@ -238,6 +255,7 @@ const QueUserDoc = ({ userId }) => {
                             document.vrfsCode
                           )
                         }
+                        disabled = {submitDisabled}
                       >
                         Submit {document.vrfSName}
                       </Button>

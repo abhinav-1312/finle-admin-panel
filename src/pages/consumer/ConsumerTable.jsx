@@ -69,7 +69,7 @@ const ConsumerTable = () => {
 
   const editConsumer = (obj) => {
     console.log("Obj: ", obj)
-    setConsumerFormData({...obj})
+    setConsumerFormData({...obj, email: obj.emailId})
     setModalOpen(true)
   }
 
@@ -203,7 +203,7 @@ const ConsumerTable = () => {
              <TextField
               label="email"
               variant="outlined"
-              name="emailId"
+              name="email"
               value={consumerFormData?.emailId}
               onChange={handleFormChange}
             />

@@ -33,6 +33,7 @@ const DealerDocUpload: React.FC = () => {
   const [documentInfo, setDocumentInfo] = useState<DocumentInfo[]>([]);
   const getUserId = localStorage.getItem("userId");
   const [imageError, setImageError] = useState(false);
+  const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false)
   useEffect(() => {
     const fetchDocumentInfo = async () => {
       try {
@@ -84,6 +85,7 @@ const DealerDocUpload: React.FC = () => {
     vrfCode: string,
     vrfsCode: string
   ) => {
+    setSubmitBtnDisabled(true)
     const {
       file,
       vrfCode: fileVrfCode,
@@ -95,10 +97,10 @@ const DealerDocUpload: React.FC = () => {
       return;
     }
 
-    const maxFileSize = 1 * 1024 * 1024;
+    const maxFileSize = 20 * 1024 * 1024;
     if (file.size > maxFileSize) {
-      console.error(`File size exceeds the maximum limit of 1 MB`);
-      alert("File size exceeds the maximum limit of 1 MB");
+      console.error(`File size exceeds the maximum limit of 20 MB.`);
+      alert("File size exceeds the maximum limit of 20 MB.");
       return;
     }
 
@@ -126,6 +128,9 @@ const DealerDocUpload: React.FC = () => {
       }
     } catch (error) {
       console.error("Error handling file:", error);
+    }
+    finally{
+      setSubmitBtnDisabled(false)
     }
   };
 
@@ -158,6 +163,7 @@ const DealerDocUpload: React.FC = () => {
   const handleImageError = () => {
     setImageError(true);
   };
+
 
   return (
     <>
@@ -307,6 +313,7 @@ const DealerDocUpload: React.FC = () => {
                             document.vrfsCode
                           )
                         }
+                        disabled={submitBtnDisabled}
                       >
                         Submit {document.vrfSName}
                       </Button>

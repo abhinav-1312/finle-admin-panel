@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PdfImgViewer from "../../components/PdfImgViewer";
-import { Card, CardContent } from "@mui/material";
+import { Button, Card, CardContent } from "@mui/material";
 
 const BlankImage = () => {
     return (
@@ -34,10 +34,24 @@ const NbfcDetail = () => {
         fetchDocuments()
     }, [fetchDocuments])
     return (
-        <div>
-            Nbfc detail {nbfcId}
                 <Card>
                     <CardContent>
+
+                    <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
+                <h1>Details for NBFC ID: {nbfcId} </h1>
+                <div>
+
+                <Button
+            variant="outlined"
+            color="warning"
+            component={Link}
+            to="/nbfc"
+            >
+            Go back
+          </Button>
+                </div>
+            </div>
+                        
                         <div style={{display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit, minmax(24rem, 1fr))"}}>
                             {
                                 docData?.map(doc => {
@@ -57,7 +71,6 @@ const NbfcDetail = () => {
                         </div>
                     </CardContent>
                 </Card>
-        </div>
     )
 }
 

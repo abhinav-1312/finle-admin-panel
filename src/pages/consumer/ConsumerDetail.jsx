@@ -1,7 +1,7 @@
-import { Card, CardContent } from '@mui/material'
+import { Button, Card, CardContent } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const ConsumerDetail = () => {
     const {userId} = useParams()
@@ -35,7 +35,20 @@ const ConsumerDetail = () => {
     <Card>
         <CardContent>
             <div style={{display: "flex", flexDirection: "column", gap: "1rem"}}>
+            <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
                 <h1>Consumer Details </h1>
+                <div>
+
+                <Button
+            variant="outlined"
+            color="warning"
+            component={Link}
+            to="/consumer"
+            >
+            Go back
+          </Button>
+                </div>
+            </div>
                 <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.5rem"}}>
                     <div>
                         <strong>User ID: </strong> {data?.userId}

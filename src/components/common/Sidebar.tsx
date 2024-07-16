@@ -79,7 +79,7 @@ const Sidebar: React.FC = () => {
             </ListItemButton>
           </ListItem>
         )}
-        {userRole.includes(2) && (
+        {userRole.includes(16) && (
           <ListItem
             className={selectedItem === "role" ? "highlighted" : ""}
             onClick={() => handleMenuItemClick("role")}
@@ -122,7 +122,7 @@ const Sidebar: React.FC = () => {
       <Divider />
 
       <List>
-        {userRole.includes(3) && (
+        {userRole.includes(17) && (
           <ListItem
             className={selectedItem === "consumers" ? "highlighted" : ""}
             onClick={() => handleMenuItemClick("consumers")}

@@ -89,6 +89,7 @@ const NbfcLoanList: React.FC = () => {
       dispatch(rejectNbfcLoanApi(nbfcId, loanId, remarks));
       setOpen(false);
       dispatch(fetchSpecificNbfcLoans());
+      
     }
   };
 

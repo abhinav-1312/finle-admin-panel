@@ -37,6 +37,8 @@ export const rejectNbfcLoanSuccess = () => ({
 });
 
 const userType = localStorage.getItem("userType")
+const firstName = localStorage.getItem('firstName')
+const lastName = localStorage.getItem('lastName')
 
 export const fetchSpecificNbfcLoans = () => {
   const userId = localStorage.getItem("userId")
@@ -185,7 +187,7 @@ export const rejectNbfcLoanApi = (nbfcId: string, loanId: string, remarks: strin
         dispatch(rejectNbfcLoanSuccess());
 
         // Display alert message
-        alert(`Loan request rejected successfully by ${userType}`);
+        alert(`Loan request rejected successfully by ${firstName} ${lastName}`);
 
         // Fetch updated data
         // dispatch(fetchSpecificNbfcLoans());
