@@ -103,11 +103,11 @@ const AppRoutes: React.FC = () => {
         />
         <Route
           path="/nbfc"
-          element={userRole.includes(3) ? <ManageNbfc /> : <PrivatePage />}
+          element={userRole.includes(4) ? <ManageNbfc /> : <PrivatePage />}
         />
         <Route
           path="/nbfc/:nbfcId"
-          element={userRole.includes(3) ? <NbfcDetail /> : <PrivatePage />}
+          element={userRole.includes(4) ? <NbfcDetail /> : <PrivatePage />}
         />
         <Route
           path="/dealer"

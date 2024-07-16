@@ -131,6 +131,9 @@ const LoanPreview: React.FC = () => {
   };
 
   const fetchDocumentPreviews = async (documents: any[]) => {
+    if(!documents){
+      return
+    }
     try {
       for (const doc of documents) {
         const token = localStorage.getItem("token");
@@ -427,7 +430,25 @@ const LoanPreview: React.FC = () => {
                 Document Details
               </Typography>
               <Divider />
+              <div>
+              <Typography variant="body1" component="span">
+                <Box className="field">
+                  Adhaar No.:  {loanDetails?.documentDetails?.aadhaarNo || "N/A"}
+                </Box>
+                <Box className="field">
+                  Pan No.: {loanDetails?.documentDetails?.panNo || "N/A"}
+                </Box>
+                <Box className="field">
+                  Electricity Bill: {loanDetails?.documentDetails?.electricityBillDetailsDto || "N/A"}
+                </Box>
+              </Typography>
+              </div>
+              <Divider />
               <Grid container spacing={2}>
+                <Typography sx={{marginTop: "2rem"}}>Uploaded Documents: </Typography>
+                {!loanDetails?.documentDetails?.uploadedDocDetailsDtoList && 
+                  <h3 className="field">     No documents uploaded</h3>
+                }
                 {loanDetails?.documentDetails?.uploadedDocDetailsDtoList?.map(
                   (doc: any, index: number) => (
                     <Grid item xs={6} key={index}>

@@ -8,7 +8,6 @@ import { Card, CardContent, Button } from '@mui/material';
 
 const UserDetails = () => {
   const { mobileNo } = useParams();
-  console.log(mobileNo);
   const [userDetails, setUserDetails] = useState(null);
 
   useEffect(() => {
@@ -103,7 +102,9 @@ const UserDetails = () => {
           </div>
         </div>
         {/* Conditionally render QueUserDoc */}
-        {userDetails.userType === 'DLR' && <QueUserDoc userId={mobileNo} />}
+
+        {/* Upload doc functionality to be not given to admin */}
+        {/* {userDetails.userType === 'DLR' && <QueUserDoc userId={mobileNo} />} */}
       </CardContent>
     </Card>
   );

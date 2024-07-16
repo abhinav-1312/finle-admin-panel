@@ -115,8 +115,6 @@ const QueUserDoc = ({ userId }) => {
     }
   };
 
-  console.log("Document info: ", documentInfo)
-
   return (
     <>
 

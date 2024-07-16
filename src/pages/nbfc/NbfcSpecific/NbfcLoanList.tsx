@@ -38,18 +38,19 @@ interface Loan {
 }
 
 const NbfcLoanList: React.FC = () => {
+  // const dispatch = useDispatch();
   const dispatch = useDispatch<ThunkDispatch<RootState, null, any>>();
   const pendingList = useSelector<RootState, Loan[]>(
-    (state) => state.specificNbfcLoan.pendingList
+    (state: RootState) => state.specificNbfcLoan.pendingList
   );
   const approvedList = useSelector<RootState, Loan[]>(
-    (state) => state.specificNbfcLoan.approvedList
+    (state: RootState) => state.specificNbfcLoan.approvedList
   );
   const rejectedList = useSelector<RootState, Loan[]>(
-    (state) => state.specificNbfcLoan.rejectedList
+    (state: RootState) => state.specificNbfcLoan.rejectedList
   );
   const adminList = useSelector<RootState, Loan[]>(
-    (state) => state.specificNbfcLoan.adminList
+    (state: RootState) => state.specificNbfcLoan.adminList
   );
   const [open, setOpen] = useState(false);
   const [nbfcId, setNbfcId] = useState("");

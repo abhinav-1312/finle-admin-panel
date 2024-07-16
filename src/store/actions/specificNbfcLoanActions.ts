@@ -1,3 +1,8 @@
+// import { ThunkAction } from "@reduxjs/toolkit";
+import { ThunkAction } from 'redux-thunk';
+import { RootState } from '../store';
+import { AnyAction } from 'redux';
+
 import axios from "axios";
 import { Dispatch } from "redux";
 
@@ -40,8 +45,8 @@ const userType = localStorage.getItem("userType")
 const firstName = localStorage.getItem('firstName')
 const lastName = localStorage.getItem('lastName')
 
-export const fetchSpecificNbfcLoans = () => {
-  const userId = localStorage.getItem("userId")
+export const fetchSpecificNbfcLoans = () : ThunkAction<void, RootState, null, AnyAction> => {
+  return async (dispatch: Dispatch) => {  const userId = localStorage.getItem("userId")
   const userIdSubsStr = userId?.substring(0, 4);
   if(userIdSubsStr === "5000"){
     return async (dispatch: Dispatch) => {
@@ -115,6 +120,8 @@ export const fetchSpecificNbfcLoans = () => {
       }
   }
   }
+}
+
 };
 // ... (other imports)
 
