@@ -121,7 +121,7 @@ const AppRoutes: React.FC = () => {
           path="/consumer"
           element={(userRole.includes(6) || userRole.includes(17))  ? <ConsumerTable /> : <PrivatePage />}
         />
-        <Route path = "/consumer/:userId" element={userRole.includes(6) ? <ConsumerDetail /> : <PrivatePage />} />
+        <Route path = "/consumer/:userId" element={userRole.includes(17) ? <ConsumerDetail /> : <PrivatePage />} />
         <Route
           path="/gp"
           element={userRole.includes(7) ? <GP /> : <Navigate to="/" />}

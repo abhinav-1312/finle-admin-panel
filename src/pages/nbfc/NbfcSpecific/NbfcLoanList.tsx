@@ -41,16 +41,16 @@ const NbfcLoanList: React.FC = () => {
   // const dispatch = useDispatch();
   const dispatch = useDispatch<ThunkDispatch<RootState, null, any>>();
   const pendingList = useSelector<RootState, Loan[]>(
-    (state: RootState) => state.specificNbfcLoan.pendingList
+    (state) => state.specificNbfcLoan.pendingList
   );
   const approvedList = useSelector<RootState, Loan[]>(
-    (state: RootState) => state.specificNbfcLoan.approvedList
+    (state) => state.specificNbfcLoan.approvedList
   );
   const rejectedList = useSelector<RootState, Loan[]>(
-    (state: RootState) => state.specificNbfcLoan.rejectedList
+    (state) => state.specificNbfcLoan.rejectedList
   );
   const adminList = useSelector<RootState, Loan[]>(
-    (state: RootState) => state.specificNbfcLoan.adminList
+    (state) => state.specificNbfcLoan.adminList
   );
   const [open, setOpen] = useState(false);
   const [nbfcId, setNbfcId] = useState("");

@@ -48,6 +48,7 @@ const DealerDocUpload: React.FC = () => {
         const data = await response.json();
         if (response.ok) {
           setDocumentInfo(data.responseData);
+
           // data.responseData.forEach((document: DocumentInfo) => {
           //   if (document.uploadStatus) {
           //     downloadDocumentAPI({
@@ -80,12 +81,20 @@ const DealerDocUpload: React.FC = () => {
       });
     };
 
+
+  const [disabledButtons, setDisabledButtons] = useState<boolean[]>([])
+
   const handleSubmit = async (
     documentType: string,
     vrfCode: string,
-    vrfsCode: string
+    vrfsCode: string,
+    index: number
   ) => {
-    setSubmitBtnDisabled(true)
+    setDisabledButtons(prev => {
+      const updatedDisabled = [...prev];
+      updatedDisabled[index] = true;
+      return updatedDisabled;
+    });
     const {
       file,
       vrfCode: fileVrfCode,
@@ -125,12 +134,19 @@ const DealerDocUpload: React.FC = () => {
       } else {
         console.error(`Failed to upload ${documentType} file`);
         alert(`Failed to upload ${documentType} file`);
+        setDisabledButtons(prev => {
+          const updatedDisabled = [...prev];
+          updatedDisabled[index] = false;
+          return updatedDisabled;
+        });
       }
     } catch (error) {
       console.error("Error handling file:", error);
-    }
-    finally{
-      setSubmitBtnDisabled(false)
+      setDisabledButtons(prev => {
+        const updatedDisabled = [...prev];
+        updatedDisabled[index] = false;
+        return updatedDisabled;
+      });
     }
   };
 
@@ -165,6 +181,7 @@ const DealerDocUpload: React.FC = () => {
   };
 
 
+
   return (
     <>
       <Typography variant="h4" gutterBottom>
@@ -172,7 +189,7 @@ const DealerDocUpload: React.FC = () => {
       </Typography>
       <Paper elevation={2} style={{ padding: 20, marginTop: 20 }}>
         <Grid container spacing={3}>
-          {documentInfo.map((document) => (
+          {documentInfo.map((document, index) => (
             <Grid item xs={6} key={document.vrfSName}>
               <div>
                 {!document.uploadStatus &&
@@ -234,7 +251,7 @@ const DealerDocUpload: React.FC = () => {
                             width: "100%",
                             height: "300px",
                           }}
-                          href={`https://fintech-users-service.azurewebsites.net/user-service/downloadDocument?userId=${getUserId}&vrfCode=${document.vrfCode}&vrfsCode=${document.vrfsCode} `}
+                          href={`https://finle-user-service.azurewebsites.net/user-service/downloadDocument?userId=${getUserId}&vrfCode=${document.vrfCode}&vrfsCode=${document.vrfsCode} `}
                           download
                         >
                           Download Document
@@ -297,6 +314,12 @@ const DealerDocUpload: React.FC = () => {
                               : doc
                           )
                         );
+
+                        setDisabledButtons(prev => {
+                          const updatedDisabled = [...prev];
+                          updatedDisabled[index] = false;
+                          return updatedDisabled;
+                        });
                       }}
                     >
                       Remove
@@ -310,10 +333,11 @@ const DealerDocUpload: React.FC = () => {
                           handleSubmit(
                             document.vrfSName,
                             document.vrfCode,
-                            document.vrfsCode
+                            document.vrfsCode,
+                            index
                           )
                         }
-                        disabled={submitBtnDisabled}
+                        disabled={disabledButtons[index]}
                       >
                         Submit {document.vrfSName}
                       </Button>
