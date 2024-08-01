@@ -5,10 +5,11 @@ sharing or distribution without prior written consent from the copyright holder<
 ------------------------------------------------------------------------------ */
 
 import React from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 
 interface Activity {
   id: any;
@@ -28,8 +29,15 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
   const dlrs = useSelector((state: RootState) => state.dlr.dealerList);
   const dsas = useSelector((state: RootState) => state.dsa.dsaList);
   const staffs = useSelector((state: RootState) => state.staff.staffList);
+  // const activeCustList = useSelector((state: RootState) => state.totActiveCust.activeCustList)
 
-  let recentActivities: Activity[] = [];
+  // const {nbfcLActiveLoanList, nbfcPendingLoanList, nbfcRejectedLoanList} = useSelector((state: RootState) => state.adminDashboard)
+
+  const loanDetailList = useSelector((state: RootState) => state.allLoanDetail.allLoanDetailList)
+
+  
+
+  let recentActivities: any[] = [];
 
   switch (activeSummaryCard) {
     case "nbfc":
@@ -67,15 +75,65 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
         }))
         .slice(-10);
       break;
+      case "activeCases":
+        recentActivities = loanDetailList?.filter((record) => (record.loanStatus === "Active Loan"))?.map((record) => ({id: record.userId, loanId: record.loanId, fullName: record.personalDetails?.name}))
+        break;
+      
+        case "pendingCases" : 
+        recentActivities = loanDetailList?.filter((record) => (record.loanStatus === "Pending"))?.map((record) => ({id: record.userId, loanId: record.loanId, fullName: record.personalDetails?.name}))
+        break;
 
-    default:
-      break;
+        case "rejectedCases" : 
+          recentActivities = loanDetailList?.filter((record) => (record.loanStatus === "Rejected"))?.map((record) => ({id: record.userId, loanId: record.loanId, fullName: record.personalDetails?.name}))
+          break;
+        case "awaitingApprovalFiles":
+          recentActivities = loanDetailList?.filter((record) => (record.loanStatus === "Awaiting Approval"))?.map((record) => ({id: record.userId, loanId: record.loanId, fullName: record.personalDetails?.name}))
+          break;
+        case "totalLoanCases":
+          recentActivities = loanDetailList?.filter((record) => (record.loanStatus === "Active Loan" || record.loanStatus === "Closed Loan"))?.map((record) => ({id: record.userId, loanId: record.loanId, fullName: record.personalDetails?.name}))
+          break;
+        case "closedLoanFiles":
+          recentActivities = loanDetailList?.filter((record) => (record.loanStatus === "Closed Loan"))?.map((record) => ({id: record.userId, loanId: record.loanId, fullName: record.personalDetails?.name}))
+          break;
+          case "incompleteLoanFiles":
+            recentActivities = loanDetailList?.filter((record) => (record.loanStatus === "Incomplete"))?.map((record) => ({id: record.userId, loanId: record.loanId, fullName: record.personalDetails?.name}))
+            break;
+
+        default:
+          break;
   }
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 100 },
-    { field: "Name", headerName: "Name", width: 200 },
+    { field: "Name", headerName: "Name", width: 400 },
   ];
+
+  const navigate = useNavigate()
+
+  const handleConsumerClick = (id: any) => {
+    navigate(`/consumer/${id}`)
+  }
+
+  const nbfcLoanTabsCols: GridColDef[] = [
+    {field: "id", headerName: "User ID", width: 100,
+      renderCell: (params) => (
+        <Button
+          variant="text"
+          color="inherit"
+          sx={{ background: "#dcdcdc" }}
+          onClick={() =>
+            handleConsumerClick(
+              params.row.id
+            )
+          }
+        >
+          {params.row.id}
+        </Button>
+      )
+    },
+    {field: "loanId", headerName: "Loan ID", width: 100},
+    {field: "fullName", headerName: "Full Name", width: 400}
+  ]
 
   return (
     <Card>
@@ -86,7 +144,7 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
         <div style={{ height: "auto", width: "100%" }}>
           <DataGrid
             rows={recentActivities}
-            columns={columns}
+            columns={(activeSummaryCard === "activeCases" || activeSummaryCard === "pendingCases" || activeSummaryCard === "rejectedCases" || activeSummaryCard === 'awaitingApprovalFiles' || activeSummaryCard === 'totalLoanCases' || activeSummaryCard === 'closedLoanFiles' || activeSummaryCard === 'incompleteLoanFiles' ) ? nbfcLoanTabsCols: columns}
             autoHeight
             initialState={{
               pagination: {

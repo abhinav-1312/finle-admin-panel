@@ -15,6 +15,9 @@ import staffReducer from './reducers/staffReducer';
 import productReducer from './reducers/productReducer';
 import specificDlrDtlsReducer from './reducers/specifixDlrDtlsReducer';
 import specificNbfcLoanReducer from './reducers/specificNbfcLoanReducer'; // Import the new reducer
+import activeCustReducer from './reducers/totActiveCustReducer'
+import AdminDashboardReducer from './reducers/AdminDashboardReducer';
+import allLoanDetailReducer from './reducers/allLoanDetailReducer';
 
 export type RootState = {
   nbfc: ReturnType<typeof nbfcReducer>;
@@ -25,7 +28,9 @@ export type RootState = {
   product: ReturnType<typeof productReducer>;
   specificDlrDtls: ReturnType<typeof specificDlrDtlsReducer>;
   specificNbfcLoan: ReturnType<typeof specificNbfcLoanReducer>; // Add the new reducer state type
-
+  totActiveCust: ReturnType<typeof activeCustReducer>;
+  adminDashboard: ReturnType<typeof AdminDashboardReducer>;
+  allLoanDetail: ReturnType<typeof allLoanDetailReducer>;
 }
 
 
@@ -38,6 +43,9 @@ const rootReducer = combineReducers({
   product: productReducer,
   specificDlrDtls: specificDlrDtlsReducer,
   specificNbfcLoan: specificNbfcLoanReducer, // Include the new reducer
+  totActiveCust: activeCustReducer,
+  adminDashboard: AdminDashboardReducer,
+  allLoanDetail: allLoanDetailReducer
 
 });
 

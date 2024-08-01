@@ -20,7 +20,6 @@ export const UPDATE_NBFC_SUCCESS = 'UPDATE_NBFC_SUCCESS';
 export const DELETE_NBFC_SUCCESS = 'DELETE_NBFC_SUCCESS';
 export const TOGGLE_NBFC_STATUS_SUCCESS = 'TOGGLE_NBFC_STATUS_SUCCESS';
 
-
 export const fetchNBFCsSuccess = (nbfcList: NBFC[]) => ({
   type: FETCH_NBFC_SUCCESS,
   payload: nbfcList,
@@ -160,3 +159,4 @@ export const toggleNBFCStatus = (nbfc: NBFC) => {
     }
   };
 };
+

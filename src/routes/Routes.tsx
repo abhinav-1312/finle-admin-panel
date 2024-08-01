@@ -33,6 +33,7 @@ import QueUserDetails from "../components/common/QueUserDetails";
 import ConsumerDetail from "../pages/consumer/ConsumerDetail";
 import NbfcDetail from "../pages/nbfc/NbfcDetail";
 import DealerDetail from "../pages/dealer/DealerDetail";
+import Lok from "./Lok";
 
 const AppRoutes: React.FC = () => {
   const [userRole, setUserRole] = useState<number[]>([]);
@@ -89,6 +90,12 @@ const AppRoutes: React.FC = () => {
             userRole.includes(1) ? getDashboardComponent() : <PrivatePage />
           )}
         />
+
+        <Route
+          path="/dashboard/:id"
+          element={userRole.includes(1) ? <Lok /> : <PrivatePage />}
+        />
+
         <Route
           path="/product"
           element={userRole.includes(2) ? <Product /> : <PrivatePage />}

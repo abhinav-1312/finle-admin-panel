@@ -67,3 +67,13 @@ sharing or distribution without prior written consent from the copyright holder<
   bottom: 0;
   left: 0;
 }
+
+.dashboard-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1rem;
+}
+
+.grid-cell{
+  padding: 1rem;
+}

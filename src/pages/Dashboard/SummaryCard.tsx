@@ -20,7 +20,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ title, value, onClick, isActi
     <Card
       className={`summary-card ${isActive ? "clicked" : ""}`}
       onClick={onClick}
-      sx={{backgroundColor: tileColor, position: "relative"}}
+      sx={{backgroundColor: tileColor, position: "relative", height: "inherit"}}
     >
       <CardContent>
         <Typography variant="h6" gutterBottom>

@@ -18,6 +18,36 @@ import RecentActivities from "./RecentActivities";
 import { RootState } from "../../store/store";
 import { ThunkDispatch } from "redux-thunk";
 import SummaryCard from "./SummaryCard";
+import axios from "axios";
+import { BASE_URL, TOKEN } from "../../utils/BaseUrl";
+import { fetchActiveCustomers } from "../../store/actions/totActiveCustActions";
+import { fetchAllNbfcLoanStatus } from "../../store/actions/AdminDashboardAction";
+import { fetchLoanDetail } from "../../store/actions/allLoanDetailActions";
+
+interface ActiveCustomers 
+{
+  id: string,
+  userId: string,
+  firstName: string,
+  lastName: string,
+  userType: string,
+  emailId: string,
+  mobileNumber: string,
+  password: string,
+  userMode: string,
+  createdBy: string,
+  createdDate: string,
+  tokenDto: string,
+  loanId: string,
+  addressLineFirst: string,
+  addressLineSecond: string,
+  city: string,
+  state: string,
+  pinCode: string,
+  remarks: string,
+  active: boolean,
+  adminFlag: boolean,
+}
 
 const Dashboard: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<RootState, null, any>>();
@@ -55,16 +85,60 @@ const Dashboard: React.FC = () => {
   const totalDsa = useSelector(
     (state: RootState) => state.dsa.dsaList.length
   );
+
+  // const totActiveCust = useSelector((state: RootState) => state.totActiveCust.activeCustList.length)
+
+  // const {nbfcLActiveLoanList, nbfcPendingLoanList, nbfcRejectedLoanList} = useSelector((state: RootState) => state.adminDashboard)
+
   const totalstaff = useSelector((state: RootState) => state.staff.staffList.length);
   const [activeSummaryCard, setActiveSummaryCard] = useState<string>("nbfc");
 
+  const loanDetailList = useSelector((state: RootState) => state.allLoanDetail.allLoanDetailList)
+
+  const activeLoanCases = []
+  const rejectedLoanCases = []
+  const pendingLoanCases = []
+  const awaitingApprovalFiles = []
+  const incompleteLoanFiles = []
+  const totalLoanCasesFiles = []
+  const closedLoanFiles = []
+
+  loanDetailList?.forEach(record => {
+    const {loanStatus} = record
+    
+    if(loanStatus === 'Active Loan')
+      activeLoanCases.push(record)
+    else if(loanStatus === "Rejected")
+      rejectedLoanCases.push(record)
+    else if(loanStatus === "Pending")
+      pendingLoanCases.push(record)
+    else if(loanStatus === "Awaiting Approval")
+      awaitingApprovalFiles.push(record)
+    else if(loanStatus === "Incomplete")
+      incompleteLoanFiles.push(record)
+    else if(loanStatus === "Closed Loan")
+      closedLoanFiles.push(record)
+
+    if(loanStatus === "Active Loan" || loanStatus === "Closed Loan")
+      totalLoanCasesFiles.push(record)
+
+  })
+
+
+  const fetchData = async () => {
+    await dispatch(fetchNBFCs());
+    await dispatch(fetchDealers());
+    await dispatch(fetchDSAs());
+    await dispatch(fetchStaffs());
+    await dispatch(fetchGPs());
+    // await dispatch(fetchActiveCustomers())
+    // await dispatch(fetchAllNbfcLoanStatus())
+    await dispatch(fetchLoanDetail())
+  }
+
   useEffect(() => {
-    dispatch(fetchNBFCs());
-    dispatch(fetchDealers());
-    dispatch(fetchDSAs());
-    dispatch(fetchStaffs());
-    dispatch(fetchGPs());
-  }, [dispatch]);
+    fetchData()
+  }, []);
 
   const handleSummaryCardClick = (dataType: string) => {
     setActiveSummaryCard(dataType);
@@ -79,6 +153,14 @@ const Dashboard: React.FC = () => {
         return "Recent DSA";
       case "staff":
         return "Recent Staff";
+      case "totActiveCust":
+        return "Total Active Customers"
+      case "activeCases":
+        return "Active Loan Cases"
+      case "rejectedCases":
+        return "Rejected Loan Cases"
+      case "pendingCases":
+        return "Pending Loan Cases"
       default:
         return "";
     }
@@ -90,7 +172,7 @@ const Dashboard: React.FC = () => {
           Dashboard
         </Typography>
       </Box>
-      <Grid container spacing={3}>
+      <div className="dashboard-grid">
         {[
           { dataType: "nbfc", label: "Total NBFC", total: totalnbfc },
           {
@@ -104,14 +186,14 @@ const Dashboard: React.FC = () => {
             total: totalDsa,
           },
           { dataType: "staff", label: "Total Staff", total: totalstaff },
-          { dataType: "staff1", label: "Total Active Customers", total: totalstaff },
-          { dataType: "staff2", label: "Active Loan Cases", total: totalstaff },
-          { dataType: "staff3", label: "Rejected Loan Cases", total: totalstaff },
-          { dataType: "staff4", label: "Pending Loan Cases", total: totalstaff },
-          { dataType: "staff5", label: "Awaiting Approval Files", total: totalstaff },
-          { dataType: "staff6", label: "Incomplete Loan File", total: totalstaff },
-          { dataType: "staff7", label: "Total Loan Cases Files", total: totalstaff },
-          { dataType: "staff8", label: "Closed Loan Files", total: totalstaff },
+          // { dataType: "totActiveCust", label: "Total Active Customers", total: totActiveCust },
+          { dataType: "activeCases", label: "Active Loan Cases", total: activeLoanCases?.length },
+          { dataType: "rejectedCases", label: "Rejected Loan Cases", total: rejectedLoanCases?.length },
+          { dataType: "pendingCases", label: "Pending Loan Cases", total: pendingLoanCases?.length },
+          { dataType: "awaitingApprovalFiles", label: "Awaiting Approval Files", total: awaitingApprovalFiles?.length },
+          { dataType: "incompleteLoanFiles", label: "Incomplete Loan File", total: incompleteLoanFiles?.length },
+          { dataType: "totalLoanCases", label: "Total Loan Cases Files", total: totalLoanCasesFiles?.length },
+          { dataType: "closedLoanFiles", label: "Closed Loan Files", total: closedLoanFiles?.length },
           { dataType: "staff9", label: "Total Collection Agencies", total: totalstaff },
         ].map((data, key) => (
           <Grid item xs={12} sm={6} md={3} key={data.dataType}>
@@ -124,7 +206,7 @@ const Dashboard: React.FC = () => {
             />
           </Grid>
         ))}
-      </Grid>
+      </div>
       <br />
       <RecentActivities
         activeSummaryCard={activeSummaryCard} // Pass the activeSummaryCard as a prop
