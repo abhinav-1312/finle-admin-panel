@@ -6,10 +6,11 @@ sharing or distribution without prior written consent from the copyright holder<
 
 import React from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { Edit, Delete, Block, CheckCircle } from "@mui/icons-material";
 import { NBFC } from "./NbfcInterface";
 import { useNavigate } from "react-router-dom";
+import PublishIcon from '@mui/icons-material/Publish';
 
 interface NBFCTableProps {
   nbfcList: NBFC[];
@@ -33,6 +34,12 @@ const NBFCTable: React.FC<NBFCTableProps> = ({
 
   const handleNbfcIdClick = (nbfcId: any) => {
     navigate(`/nbfc/${nbfcId}`)
+  }
+
+  const handleAdditionalDocUpload = (nbfc: NBFC) => {
+    console.log("Additional doc clicked nbfc: ", nbfc)
+    const {nbfcId} = nbfc
+    navigate('/nbfc-doc-upload', {state: {nbfcId}})
   }
 
   const columns: GridColDef[] = [
@@ -106,6 +113,12 @@ const NBFCTable: React.FC<NBFCTableProps> = ({
               <CheckCircle color="primary" />
             </IconButton>
           )}
+
+          <Tooltip title="Upload Additional Docs" arrow>
+            <IconButton onClick={() => handleAdditionalDocUpload(params.row as NBFC)}>
+              <PublishIcon />
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },

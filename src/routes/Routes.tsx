@@ -34,6 +34,7 @@ import ConsumerDetail from "../pages/consumer/ConsumerDetail";
 import NbfcDetail from "../pages/nbfc/NbfcDetail";
 import DealerDetail from "../pages/dealer/DealerDetail";
 import Lok from "./Lok";
+import NbfcDashboardDetails from "../pages/Dashboard/NbfcDashboardDetails";
 
 const AppRoutes: React.FC = () => {
   const [userRole, setUserRole] = useState<number[]>([]);
@@ -93,7 +94,7 @@ const AppRoutes: React.FC = () => {
 
         <Route
           path="/dashboard/:id"
-          element={userRole.includes(1) ? <Lok /> : <PrivatePage />}
+          element={userRole.includes(1) ? <NbfcDashboardDetails /> : <PrivatePage />}
         />
 
         <Route
@@ -173,6 +174,12 @@ const AppRoutes: React.FC = () => {
         />
         <Route
           path="/dlr-doc-upload"
+          element={
+            userRole.includes(15) ? <DealerDocUpload /> : <PrivatePage />
+          }
+        />
+        <Route
+          path="/nbfc-doc-upload"
           element={
             userRole.includes(15) ? <DealerDocUpload /> : <PrivatePage />
           }

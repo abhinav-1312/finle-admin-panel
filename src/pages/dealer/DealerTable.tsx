@@ -6,10 +6,11 @@ sharing or distribution without prior written consent from the copyright holder<
 
 import React from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { Edit, Delete, Block, CheckCircle } from "@mui/icons-material";
 import { Dealer } from "./DealerInterface";
 import { useNavigate } from "react-router-dom";
+import PublishIcon from '@mui/icons-material/Publish';
 
 interface DealerTableProps {
   DlrList: Dealer[];
@@ -33,6 +34,12 @@ const DealerTable: React.FC<DealerTableProps> = ({
 
   const handleDealerIdClick = (id: any) => {
     navigate(`/dealer/${id}`)
+  }
+
+  const handleAdditionalDocUpload = (dealer: Dealer) => {
+    console.log("Additional doc clicked: ", dealer)
+    const {dealerId} = dealer
+    navigate('/dlr-doc-upload', {state: {dealerId}})
   }
 
   const columns: GridColDef[] = [
@@ -94,7 +101,15 @@ const DealerTable: React.FC<DealerTableProps> = ({
             >
               <CheckCircle color="primary" />
             </IconButton>
+
+            
           )}
+
+          <Tooltip title="Upload Additional Docs" arrow>
+            <IconButton onClick={() => handleAdditionalDocUpload(params.row as Dealer)}>
+              <PublishIcon />
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },

@@ -103,9 +103,40 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
           break;
   }
 
+  // const columns: GridColDef[] = [
+  //   { field: "id", headerName: "ID", width: 100 },
+  //   { field: "Name", headerName: "Name", width: 400 },
+  // ];
+
+
+ /* onclick on NBFC Id */
+
+  const handleIdClick = (id: any, name: string) => {
+    // const encodedName = encodeURIComponent(name.trim());
+    console.log("ID clicked:", id);
+    navigate(`/dashboard/${id}`);
+  };
+
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 100 },
-    { field: "Name", headerName: "Name", width: 400 },
+    {
+      field: "id",
+      headerName: "ID",
+      width: 100,
+      renderCell: (params) => (
+        <button
+          style={{
+            cursor: "pointer",
+            background: "grey",
+            border: "none",
+            height: "30px",
+            color: "#fff",
+          }}
+          onClick={() => handleIdClick(params.value, params.row.Name)}>
+          {params.value}
+        </button>
+      ),
+    },
+    { field: "Name", headerName: "Name", width: 200 },
   ];
 
   const navigate = useNavigate()

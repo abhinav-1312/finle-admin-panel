@@ -10,6 +10,7 @@ import {
   CardMedia,
 } from "@mui/material";
 import { BASE_URL, TOKEN } from "../../../../utils/BaseUrl";
+import { Link, useLocation } from "react-router-dom";
 
 interface UploadedFiles {
   [key: string]: {
@@ -29,6 +30,13 @@ interface DocumentInfo {
 }
 
 const DealerDocUpload: React.FC = () => {
+  const location = useLocation();
+  const { dealerId } = location.state || {};
+  const { nbfcId } = location.state || {};
+
+  console.log("DEALER ID: ", dealerId)
+  console.log("Nbfc ID: ", nbfcId)
+
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFiles>({});
   const [documentInfo, setDocumentInfo] = useState<DocumentInfo[]>([]);
   const getUserId = localStorage.getItem("userId");
@@ -38,7 +46,7 @@ const DealerDocUpload: React.FC = () => {
     const fetchDocumentInfo = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/user-service/dealerDocuments?userId=${getUserId}`,
+          `${BASE_URL}/user-service/dealerDocuments?userId=${dealerId ? dealerId : (nbfcId ? nbfcId : getUserId)}`,
           {
             headers: {
               Authorization: ` ${TOKEN}`,
@@ -116,7 +124,7 @@ const DealerDocUpload: React.FC = () => {
     try {
       const formData = new FormData();
       formData.append("file", file as Blob);
-      formData.append("userId", localStorage.getItem("userId") || "");
+      formData.append("userId", dealerId ? dealerId : (nbfcId ? nbfcId : getUserId));
       formData.append("vrfCode", vrfCode);
       formData.append("vrfsCode", vrfsCode);
 
@@ -185,8 +193,21 @@ const DealerDocUpload: React.FC = () => {
   return (
     <>
       <Typography variant="h4" gutterBottom>
-        Dealer Doc Upload
+        {
+          nbfcId ? `NBFC Document Upload for NBFC Id: ${nbfcId}`
+          :
+          `Dealer Doc Upload for Dealer Id: ${dealerId ? dealerId: getUserId}`
+        }
+        {/* Dealer Doc Upload */}
       </Typography>
+      <Button
+            variant="outlined"
+            color="warning"
+            component={Link}
+            to="/"
+            >
+            Go back
+          </Button>
       <Paper elevation={2} style={{ padding: 20, marginTop: 20 }}>
         <Grid container spacing={3}>
           {documentInfo.map((document, index) => (

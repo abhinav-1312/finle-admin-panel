@@ -316,7 +316,7 @@ const CollectionDashboard: React.FC = () => {
             Avg. Collection Rate
           </Typography>
           <Typography variant="h4">
-            {avgCollectionRate}
+            {avgCollectionRate} %
           </Typography>
         </Card>
 
@@ -325,7 +325,7 @@ const CollectionDashboard: React.FC = () => {
             Delinquency Rate
           </Typography>
           <Typography variant="h4">
-            1000
+            0 %
           </Typography>
         </Card>
 
