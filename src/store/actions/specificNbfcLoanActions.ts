@@ -5,6 +5,7 @@ import { AnyAction } from 'redux';
 
 import axios from "axios";
 import { Dispatch } from "redux";
+import { apiCall } from '../../utils/UtilFunctions';
 
 export const FETCH_NBFC_LOANS = "FETCH_NBFC_LOANS";
 export const APPROVE_NBFC_LOAN_SUCCESS = "APPROVE_NBFC_LOAN_SUCCESS";
@@ -140,6 +141,8 @@ export const approveNbfcLoanApi = (nbfcId: string, loanId: string, remarks: stri
           loanId: loanId,
           remarks: remarks,
         };
+
+        // await apiCall("POST", "https://finle-api-gateway.azurewebsites.net/admin-service/approveLoanRequest", params as any)
 
         await axios.post(
           "https://finle-api-gateway.azurewebsites.net/admin-service/approveLoanRequest",

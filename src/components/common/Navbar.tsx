@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { Typography, IconButton, Toolbar, Button, Box } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import DragHandleIcon from '@mui/icons-material/DragHandle';
+
 
 interface AppBarProps extends MuiAppBarProps {
   handleDrawerOpen: () => void;

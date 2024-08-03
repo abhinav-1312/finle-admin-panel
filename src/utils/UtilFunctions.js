@@ -1,7 +1,7 @@
 import axios from "axios"
 import { BASE_URL, TOKEN } from "./BaseUrl"
 
-export const apiCall = async (method, url, payload=null) => {
+export const apiCall = async (method, url, payload= null) => {
     const header = {
       headers: {
         "Content-Type": "application/json",

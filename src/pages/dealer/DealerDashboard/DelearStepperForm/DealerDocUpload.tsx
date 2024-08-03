@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { BASE_URL, TOKEN } from "../../../../utils/BaseUrl";
 import { Link, useLocation } from "react-router-dom";
+import PdfImgViewer from "../../../../components/PdfImgViewer";
 
 interface UploadedFiles {
   [key: string]: {
@@ -261,9 +262,26 @@ const DealerDocUpload: React.FC = () => {
                           image={`https://fintech-users-service.azurewebsites.net/user-service/downloadDocument?userId=${getUserId}&vrfCode=${document.vrfCode}&vrfsCode=${document.vrfsCode} `}
                           // onError={handleImageError}
                         /> */}
+
+<>
+                  <PdfImgViewer
+                    userId={dealerId ? dealerId : (nbfcId ? nbfcId : getUserId)}
+                    vrfCode={document.vrfCode}
+                    vrfsCode={document.vrfsCode}
+                    />
+                {/* <Button
+                  variant="outlined"
+                  color="primary"
+                  sx={{marginTop: "0.5rem"}}
+                  href={`https://finle-user-service.azurewebsites.net/user-service/downloadDocument?userId=${dealerId ? dealerId : (nbfcId ? nbfcId : getUserId)}&vrfCode=${document.vrfCode}&vrfsCode=${document.vrfsCode} `}
+                  download
+                  >
+                  Download 
+                </Button> */}
+                  </>
                   
 
-                    
+{/*                     
                         <Button
                           variant="contained"
                           color="primary"
@@ -272,11 +290,11 @@ const DealerDocUpload: React.FC = () => {
                             width: "100%",
                             height: "300px",
                           }}
-                          href={`https://finle-user-service.azurewebsites.net/user-service/downloadDocument?userId=${getUserId}&vrfCode=${document.vrfCode}&vrfsCode=${document.vrfsCode} `}
+                          href={`https://finle-user-service.azurewebsites.net/user-service/downloadDocument?userId=${dealerId ? dealerId : (nbfcId ? nbfcId : getUserId)}&vrfCode=${document.vrfCode}&vrfsCode=${document.vrfsCode} `}
                           download
                         >
                           Download Document
-                        </Button>
+                        </Button> */}
                    
                     </div>
                   ) : (
@@ -317,34 +335,37 @@ const DealerDocUpload: React.FC = () => {
                   </CardContent>
 
                   <CardActions>
+                    {
+                      (nbfcId || dealerId) &&
                     <Button
-                      size="medium"
-                      color="error"
-                      variant="outlined"
-                      onClick={() => {
-                        setUploadedFiles((prevFiles) => {
-                          const updatedFiles = { ...prevFiles };
-                          updatedFiles[document.vrfSName] = null;
-                          return updatedFiles;
-                        });
-                        // Optionally, you can update the documentInfo state to set uploadStatus to false
-                        setDocumentInfo((prevDocs) =>
-                          prevDocs.map((doc) =>
-                            doc.vrfSName === document.vrfSName
-                              ? { ...doc, uploadStatus: false }
-                              : doc
-                          )
-                        );
-
-                        setDisabledButtons(prev => {
-                          const updatedDisabled = [...prev];
-                          updatedDisabled[index] = false;
-                          return updatedDisabled;
-                        });
-                      }}
-                    >
+                    size="medium"
+                    color="error"
+                    variant="outlined"
+                    onClick={() => {
+                      setUploadedFiles((prevFiles) => {
+                        const updatedFiles = { ...prevFiles };
+                        updatedFiles[document.vrfSName] = null;
+                        return updatedFiles;
+                      });
+                      // Optionally, you can update the documentInfo state to set uploadStatus to false
+                      setDocumentInfo((prevDocs) =>
+                        prevDocs.map((doc) =>
+                          doc.vrfSName === document.vrfSName
+                      ? { ...doc, uploadStatus: false }
+                      : doc
+                    )
+                  );
+                  
+                  setDisabledButtons(prev => {
+                    const updatedDisabled = [...prev];
+                    updatedDisabled[index] = false;
+                    return updatedDisabled;
+                  });
+                }}
+                >
                       Remove
                     </Button>
+                    }
                     {document.uploadStatus ? null : (
                       <Button
                         size="medium"
