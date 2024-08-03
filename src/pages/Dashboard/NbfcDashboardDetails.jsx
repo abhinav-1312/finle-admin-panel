@@ -5,7 +5,10 @@ import { TOKEN } from "../../utils/BaseUrl";
 import { Box, Grid, Typography, Button } from "@mui/material";
 import styles from "./Dashboard.module.scss";
 import SummaryCard from "./SummaryCard";
+import { RootState } from "../../store/store";
 import RecentActivities from "./RecentActivities";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLoanDetail } from "../../store/actions/allLoanDetailActions";
 
 const NbfcDashboardDetails = () => {
   const { id } = useParams();
@@ -26,43 +29,81 @@ const NbfcDashboardDetails = () => {
   const [totalRequest, setTotalRequest] = useState([]);
   const [closeRequest, setCloseRequest] = useState([]);
   const [activeSummaryCard, setActiveSummaryCard] = useState("active");
+  const dispatch = useDispatch()
+
+
+  const loanDetailList = useSelector((state) => state.allLoanDetail.allLoanDetailList)
+
+  console.log("LoanDetaillist: ", loanDetailList)
+
+  const activeLoanCases = []
+  const rejectedLoanCases = []
+  const pendingLoanCases = []
+  const awaitingApprovalFiles = []
+  const incompleteLoanFiles = []
+  const totalLoanCasesFiles = []
+  const closedLoanFiles = []
+
+  loanDetailList?.forEach(record => {
+    const {loanStatus, nbfcId} = record
+    
+    if(loanStatus === 'Active Loan' && nbfcId === id)
+      activeLoanCases.push(record)
+    else if(loanStatus === "Rejected" && nbfcId === id)
+      rejectedLoanCases.push(record)
+    else if(loanStatus === "Pending" && nbfcId === id)
+      pendingLoanCases.push(record)
+    else if(loanStatus === "Awaiting Approval" && nbfcId === id)
+      awaitingApprovalFiles.push(record)
+    else if(loanStatus === "Incomplete" && nbfcId === id)
+      incompleteLoanFiles.push(record)
+    else if(loanStatus === "Closed Loan" && nbfcId === id)
+      closedLoanFiles.push(record)
+
+    if((loanStatus === "Active Loan" || loanStatus === "Closed Loan") && nbfcId === id)
+      totalLoanCasesFiles.push(record)
+
+  })
+
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://finle-user-service.azurewebsites.net/user-service/allLoanDetails?id=${id}`,
-          {
-            headers: {
-              Authorization: TOKEN,
-            },
-          }
-        );
-        const data = response.data.responseData;
-        setLoanDetails({
-          active: data?.csrNbfcaApprovedRequestList?.length || 0,
-          pending: data?.csrNbfcPendingRequestList?.length || 0,
-          rejected: data?.csrNbfcRejectedRequestList?.length || 0,
-          approved: data?.csrNbfcApprovedRequestList?.length || 0,
-          incomplete: data?.csrNbfcIncompleteRequestList?.length || 0,
-          total: data?.csrNbfcTotalRequestList?.length || 0,
-          close: data?.csrNbfcCloseRequestList?.length || 0,
-        });
-        setApprovedRequest(data?.csrNbfcApprovedRequestList || []);
-        setPendingRequest(data?.csrNbfcPendingRequestList || []);
-        setRejectedRequest(data?.csrNbfcRejectedRequestList || []);
-        setActiveRequest(data?.csrNbfcaApprovedRequestList || []);
-        setIncompleteRequest(data?.csrNbfcIncompleteRequestList || []);
-        setTotalRequest(data?.csrNbfcTotalRequestList || []);
-        setCloseRequest(data?.csrNbfcCloseRequestList || []);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `https://finle-user-service.azurewebsites.net/user-service/allLoanDetails?id=${id}`,
+    //       {
+    //         headers: {
+    //           Authorization: TOKEN,
+    //         },
+    //       }
+    //     );
+    //     const data = response.data.responseData;
+    //     setLoanDetails({
+    //       active: data?.csrNbfcaApprovedRequestList?.length || 0,
+    //       pending: data?.csrNbfcPendingRequestList?.length || 0,
+    //       rejected: data?.csrNbfcRejectedRequestList?.length || 0,
+    //       approved: data?.csrNbfcApprovedRequestList?.length || 0,
+    //       incomplete: data?.csrNbfcIncompleteRequestList?.length || 0,
+    //       total: data?.csrNbfcTotalRequestList?.length || 0,
+    //       close: data?.csrNbfcCloseRequestList?.length || 0,
+    //     });
+    //     setApprovedRequest(data?.csrNbfcApprovedRequestList || []);
+    //     setPendingRequest(data?.csrNbfcPendingRequestList || []);
+    //     setRejectedRequest(data?.csrNbfcRejectedRequestList || []);
+    //     setActiveRequest(data?.csrNbfcaApprovedRequestList || []);
+    //     setIncompleteRequest(data?.csrNbfcIncompleteRequestList || []);
+    //     setTotalRequest(data?.csrNbfcTotalRequestList || []);
+    //     setCloseRequest(data?.csrNbfcCloseRequestList || []);
+    //     console.log(data);
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // };
 
-    fetchData();
-  }, [id]);
+    // fetchData();
+
+    dispatch(fetchLoanDetail())
+  }, [dispatch]);
 
   const handleSummaryCardClick = (dataType) => {
     setActiveSummaryCard(dataType);
@@ -94,17 +135,17 @@ const NbfcDashboardDetails = () => {
       case "approved":
         return approvedRequest;
       case "pending":
-        return pendingRequest;
+        return pendingLoanCases;
       case "rejected":
-        return rejectedRequest;
+        return rejectedLoanCases;
       case "active":
-        return activeRequest;
+        return activeLoanCases;
       case "incomplete":
-        return incompleteRequest;
+        return incompleteLoanFiles;
       case "total":
-        return totalRequest;
+        return totalLoanCasesFiles;
       case "close":
-        return closeRequest;
+        return closedLoanFiles;
       default:
         return [];
     }
@@ -124,17 +165,17 @@ const NbfcDashboardDetails = () => {
     {
       dataType: "active",
       label: "Active Loan Cases",
-      total: loanDetails.active,
+      total: activeLoanCases?.length,
     },
     {
       dataType: "pending",
       label: "Pending Loan Cases",
-      total: loanDetails.pending,
+      total: pendingLoanCases?.length,
     },
     {
       dataType: "rejected",
       label: "Rejected Loan Cases",
-      total: loanDetails.rejected,
+      total: rejectedLoanCases?.length,
     },
     {
       dataType: "approved",
@@ -144,10 +185,10 @@ const NbfcDashboardDetails = () => {
     {
       dataType: "incomplete",
       label: "Incomplete Loan Cases",
-      total: loanDetails.incomplete,
+      total: incompleteLoanFiles?.length,
     },
-    { dataType: "total", label: "Total Loan Cases", total: loanDetails.total },
-    { dataType: "close", label: "Close Loan Cases", total: loanDetails.close },
+    { dataType: "total", label: "Total Loan Cases", total: totalLoanCasesFiles?.length },
+    { dataType: "close", label: "Close Loan Cases", total: closedLoanFiles?.length },
   ];
 
   return (
