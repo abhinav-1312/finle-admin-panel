@@ -64,7 +64,7 @@ const ConsumerTable = () => {
   const navigate = useNavigate()
 
   const handleUserDetailClick = (userId) => {
-    navigate(`/consumer/${userId}`)
+    navigate(`/consumer/${userId}`, {state: {fromLoc: window.location.pathname}})
   }
 
   const editConsumer = (obj) => {
@@ -130,7 +130,7 @@ const ConsumerTable = () => {
     e.preventDefault()
     const url = "https://finle-user-service.azurewebsites.net/user-service/updateUser"
     try{
-      const res = await axios.post(url, consumerFormData)
+      await axios.post(url, consumerFormData)
       alert("Consumer data editted successfully!")
     }catch(error){
       console.log("Error on edit.", error)

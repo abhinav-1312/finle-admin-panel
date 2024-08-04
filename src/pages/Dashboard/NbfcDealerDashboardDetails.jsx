@@ -1,40 +1,21 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useParams, Link } from "react-router-dom";
-import { TOKEN } from "../../utils/BaseUrl";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { Box, Grid, Typography, Button } from "@mui/material";
 import styles from "./Dashboard.module.scss";
 import SummaryCard from "./SummaryCard";
-import { RootState } from "../../store/store";
-import RecentActivities from "./RecentActivities";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLoanDetail } from "../../store/actions/allLoanDetailActions";
+import NbfcDashboardDetailTable from "./NbfcDealerDashboardDetailTable";
 
-const NbfcDashboardDetails = () => {
+const NbfcDealerDashboardDetails = () => {
+    const location = useLocation()
+    const {dataFor} = location?.state || ""
   const { id } = useParams();
-  const [loanDetails, setLoanDetails] = useState({
-    active: 0,
-    pending: 0,
-    rejected: 0,
-    approved: 0,
-    incomplete: 0,
-    total: 0,
-    close: 0,
-  });
-  const [approvedRequest, setApprovedRequest] = useState([]);
-  const [pendingRequest, setPendingRequest] = useState([]);
-  const [rejectedRequest, setRejectedRequest] = useState([]);
-  const [activeRequest, setActiveRequest] = useState([]);
-  const [incompleteRequest, setIncompleteRequest] = useState([]);
-  const [totalRequest, setTotalRequest] = useState([]);
-  const [closeRequest, setCloseRequest] = useState([]);
   const [activeSummaryCard, setActiveSummaryCard] = useState("active");
   const dispatch = useDispatch()
 
 
   const loanDetailList = useSelector((state) => state.allLoanDetail.allLoanDetailList)
-
-  console.log("LoanDetaillist: ", loanDetailList)
 
   const activeLoanCases = []
   const rejectedLoanCases = []
@@ -45,23 +26,23 @@ const NbfcDashboardDetails = () => {
   const closedLoanFiles = []
 
   loanDetailList?.forEach(record => {
-    const {loanStatus, nbfcId} = record
+    const {loanStatus, nbfcId, partnerId} = record
     
-    if(loanStatus === 'Active Loan' && nbfcId === id)
-      activeLoanCases.push(record)
-    else if(loanStatus === "Rejected" && nbfcId === id)
-      rejectedLoanCases.push(record)
-    else if(loanStatus === "Pending" && nbfcId === id)
-      pendingLoanCases.push(record)
-    else if(loanStatus === "Awaiting Approval" && nbfcId === id)
-      awaitingApprovalFiles.push(record)
-    else if(loanStatus === "Incomplete" && nbfcId === id)
-      incompleteLoanFiles.push(record)
-    else if(loanStatus === "Closed Loan" && nbfcId === id)
-      closedLoanFiles.push(record)
+    if(loanStatus === 'Active Loan' && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+      activeLoanCases.push({id: record.loanId, ...record})
+    else if(loanStatus === "Rejected" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+      rejectedLoanCases.push({id: record.loanId, ...record})
+    else if(loanStatus === "Pending" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+      pendingLoanCases.push({id: record.loanId, ...record})
+    else if(loanStatus === "Awaiting Approval" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+      awaitingApprovalFiles.push({id: record.loanId, ...record})
+    else if(loanStatus === "Incomplete" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+      incompleteLoanFiles.push({id: record.loanId, ...record})
+    else if(loanStatus === "Closed Loan" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+      closedLoanFiles.push({id: record.loanId, ...record})
 
-    if((loanStatus === "Active Loan" || loanStatus === "Closed Loan") && nbfcId === id)
-      totalLoanCasesFiles.push(record)
+    if((loanStatus === "Active Loan" || loanStatus === "Closed Loan") && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+      totalLoanCasesFiles.push({id: record.loanId, ...record})
 
   })
 
@@ -101,13 +82,15 @@ const NbfcDashboardDetails = () => {
     // };
 
     // fetchData();
-
-    dispatch(fetchLoanDetail())
-  }, [dispatch]);
+    if(!loanDetailList.length)
+      dispatch(fetchLoanDetail())
+  }, [dispatch, loanDetailList]);
 
   const handleSummaryCardClick = (dataType) => {
     setActiveSummaryCard(dataType);
   };
+
+  console.log("LOAN DETAIL LISTTTT: ", loanDetailList)
 
   const getDynamicTitle = () => {
     switch (activeSummaryCard) {
@@ -130,10 +113,12 @@ const NbfcDashboardDetails = () => {
     }
   };
 
+  console.log("incomplete: ", incompleteLoanFiles)
+
   const getActiveRecords = () => {
     switch (activeSummaryCard) {
       case "approved":
-        return approvedRequest;
+        return "";
       case "pending":
         return pendingLoanCases;
       case "rejected":
@@ -177,11 +162,11 @@ const NbfcDashboardDetails = () => {
       label: "Rejected Loan Cases",
       total: rejectedLoanCases?.length,
     },
-    {
-      dataType: "approved",
-      label: "Approved Loan Cases",
-      total: loanDetails.approved,
-    },
+    // {
+    //   dataType: "approved",
+    //   label: "Approved Loan Cases",
+    //   total: loanDetails.approved,
+    // },
     {
       dataType: "incomplete",
       label: "Incomplete Loan Cases",
@@ -207,7 +192,7 @@ const NbfcDashboardDetails = () => {
       <div className={styles.dashboard}>
         <Box mb={3}>
           <Typography variant="h4" className="dashboard-title" gutterBottom>
-            Loan Details
+            Loan Details 
           </Typography>
         </Box>
         <Grid container spacing={3}>
@@ -224,14 +209,16 @@ const NbfcDashboardDetails = () => {
           ))}
         </Grid>
         <br />
-        <RecentActivities
-          activeSummaryCard={activeSummaryCard}
+        <NbfcDashboardDetailTable
+        //   activeSummaryCard={activeSummaryCard}
           title={getDynamicTitle()}
-          activityList={getActiveRecords()}
+          data = {getActiveRecords()}
+          dataFor = {dataFor}
+        //   activityList={getActiveRecords()}
         />
       </div>
     </>
   );
 };
 
-export default NbfcDashboardDetails;
+export default NbfcDealerDashboardDetails;

@@ -112,9 +112,7 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
  /* onclick on NBFC Id */
 
   const handleIdClick = (id: any, name: string) => {
-    // const encodedName = encodeURIComponent(name.trim());
-    console.log("ID clicked:", id);
-    navigate(`/dashboard/${id}`);
+    navigate(`/dashboard/${id}`, {state: {dataFor: activeSummaryCard}});
   };
 
   const columns: GridColDef[] = [

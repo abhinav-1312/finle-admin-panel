@@ -1,9 +1,12 @@
 import { Button, Card, CardContent } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-const ConsumerDetail = () => {
+const ConsumerDetail = ({dataFor}) => {
+    const navigate = useNavigate()
+    const location = useLocation()
+    const {fromLoc} = location.state || '/'
     const {userId} = useParams()
 
     const [data, setData] = useState(null)
@@ -31,19 +34,27 @@ const ConsumerDetail = () => {
             <h3> Loading please wait...</h3>
         )
     }
+
+    const handleGoBackClick = () => {
+        navigate(fromLoc, {state: {dataFor: dataFor || null}})
+    }
   return (
     <Card>
         <CardContent>
             <div style={{display: "flex", flexDirection: "column", gap: "1rem"}}>
             <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
-                <h1>Consumer Details </h1>
+                <h1>Consumer Details</h1>
                 <div>
+                {/* <Link to="/" state={{ from: window.location.pathname }}>
+  <Button variant="outlined" color="warning">Go to Current Page</Button>
+</Link> */}
 
                 <Button
             variant="outlined"
             color="warning"
-            component={Link}
-            to="/consumer"
+            // component={Link}
+            // to={fromLoc}
+            onClick={()=>handleGoBackClick()}
             >
             Go back
           </Button>

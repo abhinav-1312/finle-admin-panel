@@ -5,7 +5,7 @@ sharing or distribution without prior written consent from the copyright holder<
 ------------------------------------------------------------------------------ */
 
 import React, { useEffect, useState } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Product from "../pages/manageProducts/Product";
 import ManageNbfc from "../pages/nbfc/Nbfc";
@@ -33,8 +33,27 @@ import QueUserDetails from "../components/common/QueUserDetails";
 import ConsumerDetail from "../pages/consumer/ConsumerDetail";
 import NbfcDetail from "../pages/nbfc/NbfcDetail";
 import DealerDetail from "../pages/dealer/DealerDetail";
-import Lok from "./Lok";
-import NbfcDashboardDetails from "../pages/Dashboard/NbfcDashboardDetails";
+import NbfcDashboardDetails from "../pages/Dashboard/NbfcDealerDashboardDetails";
+// import { RouteComponentProps } from 'react-router-dom';
+
+interface LocationState {
+  dataFor: any; // Adjust this type based on your data
+}
+
+
+const ConsumerDetailPage: React.FC = () => {
+  const location = useLocation();
+  const state = location.state as LocationState | null; // Cast state to expected type
+
+  // Extract the dataFor from state
+  const dataFor = state?.dataFor || {}; // Provide a default value or handle null case
+
+  return (
+    <ConsumerDetail dataFor={dataFor} />
+  );
+};
+
+
 
 const AppRoutes: React.FC = () => {
   const [userRole, setUserRole] = useState<number[]>([]);
@@ -129,7 +148,7 @@ const AppRoutes: React.FC = () => {
           path="/consumer"
           element={(userRole.includes(6) || userRole.includes(17))  ? <ConsumerTable /> : <PrivatePage />}
         />
-        <Route path = "/consumer/:userId" element={userRole.includes(17) ? <ConsumerDetail /> : <PrivatePage />} />
+        <Route path = "/consumer/:userId" element={userRole.includes(17) ? <ConsumerDetailPage /> : <PrivatePage />} />
         <Route
           path="/gp"
           element={userRole.includes(7) ? <GP /> : <Navigate to="/" />}
