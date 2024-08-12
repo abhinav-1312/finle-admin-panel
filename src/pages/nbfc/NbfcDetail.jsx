@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import PdfImgViewer from "../../components/PdfImgViewer";
 import { Button, Card, CardContent } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
+import DocumentDrawer from "../../components/DocumentDrawer";
 
 const BlankImage = () => {
   return (
@@ -61,43 +62,9 @@ const NbfcDetail = () => {
             </Button>
           </div>
         </div>
+        
+        <DocumentDrawer docData={docData} userId={nbfcId} downloadOptionEnabled={true} />
 
-        <div
-          style={{
-            display: "grid",
-            gap: "1rem",
-            gridTemplateColumns: "repeat(auto-fit, minmax(24rem, 1fr))",
-          }}
-        >
-          {docData?.map((doc) => {
-            return (
-              <div key={doc.vrfSName} style={{border:  '1px solid #1876d2', width: 'fit-content', padding: '0.5rem', borderRadius: '5px'}}>
-                <h3 style={{margin: '0.2rem 0'}}>{doc.vrfSName}</h3>
-                {doc.uploadStatus ? (
-                  <>
-                  <PdfImgViewer
-                    userId={nbfcId}
-                    vrfCode={doc.vrfCode}
-                    vrfsCode={doc.vrfsCode}
-                    />
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  sx={{marginTop: "0.5rem"}}
-                  href={`https://finle-user-service.azurewebsites.net/user-service/downloadDocument?userId=${nbfcId}&vrfCode=${doc.vrfCode}&vrfsCode=${doc.vrfsCode} `}
-                  download
-                  >
-                  Download 
-                </Button>
-                  </>
-                ) : (
-                  <BlankImage />
-                )}
-
-              </div>
-            );
-          })}
-        </div>
       </CardContent>
     </Card>
   );

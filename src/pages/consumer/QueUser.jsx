@@ -26,7 +26,7 @@ const QueUser = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/user-service/getAllUserDetails`, {}, {
+      const response = await axios.post(`/user-service/getAllUserDetails`, {}, {
         headers: {
           Authorization: TOKEN,
         },
@@ -54,7 +54,7 @@ const QueUser = () => {
       const userRemarks = prompt("Enter remarks:");
       if (userRemarks !== null) {
         const response = await axios.post(
-          `${BASE_URL}/admin-service/approve`,
+          `/admin-service/approve`,
           {
 
             remarks: userRemarks,
@@ -94,7 +94,7 @@ const QueUser = () => {
       const userRemarks = prompt("Enter remarks:");
       if (userRemarks !== null) {
         const response = await axios.post(
-          `${BASE_URL}/admin-service/reject`,
+          `/admin-service/reject`,
           {
 
             remarks: userRemarks,

@@ -329,6 +329,9 @@ const CollectionDashboard: React.FC = () => {
           </Typography>
         </Card>
 
+        {
+          localStorage.getItem('userType') !== 'Nbfc' && (
+            <>
         <Card className={`summary-card grid-cell ${activeTab === "tab12" ? 'clicked' : ''}`} onClick={()=>setActiveTab('tab12')} sx={{backgroundColor: tileColor[11]}}>
           <Typography variant="h6" gutterBottom>
             C. Agency Assigned
@@ -346,6 +349,10 @@ const CollectionDashboard: React.FC = () => {
             1000
           </Typography>
         </Card>
+            </>
+          )
+        }
+
 
       </div>
 

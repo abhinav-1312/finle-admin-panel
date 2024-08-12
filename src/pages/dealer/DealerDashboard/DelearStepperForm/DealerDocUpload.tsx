@@ -47,7 +47,7 @@ const DealerDocUpload: React.FC = () => {
     const fetchDocumentInfo = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/user-service/dealerDocuments?userId=${dealerId ? dealerId : (nbfcId ? nbfcId : getUserId)}`,
+          `https://finle-api-gateway.azurewebsites.net/user-service/dealerDocuments?userId=${dealerId ? dealerId : (nbfcId ? nbfcId : getUserId)}`,
           {
             headers: {
               Authorization: ` ${TOKEN}`,
@@ -129,7 +129,7 @@ const DealerDocUpload: React.FC = () => {
       formData.append("vrfCode", vrfCode);
       formData.append("vrfsCode", vrfsCode);
 
-      const response = await fetch(`${BASE_URL}/user-service/uploadDocument`, {
+      const response = await fetch(`https://finle-api-gateway.azurewebsites.net/user-service/uploadDocument`, {
         method: "POST",
         headers: {
           Authorization: ` ${TOKEN}`,
@@ -168,7 +168,7 @@ const DealerDocUpload: React.FC = () => {
   // }) => {
   //   try {
   //     const response = await fetch(
-  //       `${BASE_URL}/user-service/downloadDocument?userId=${getUserId}&vrfCode=${vrfCode}&vrfsCode=${vrfsCode}`,
+  //       `/user-service/downloadDocument?userId=${getUserId}&vrfCode=${vrfCode}&vrfsCode=${vrfsCode}`,
   //       {
   //         headers: {
   //           Authorization: ` ${TOKEN}`,

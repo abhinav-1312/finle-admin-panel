@@ -14,7 +14,7 @@ const UserDetails = () => {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.post(
-          `${BASE_URL}/user-service/userDetails`,
+          `/user-service/userDetails`,
           {
             userId: mobileNo,
           },

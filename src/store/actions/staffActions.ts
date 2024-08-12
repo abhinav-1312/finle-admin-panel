@@ -23,7 +23,7 @@ export const fetchStaffsSuccess = (staffList: Staff[]) => ({
 export const fetchStaffs = () => {
   return async (dispatch: Dispatch) => {
     try {
-      const response = await axios.get<any>(`${BASE_URL}/admin-service/getStaffDetails`, {
+      const response = await axios.get<any>(`/admin-service/getStaffDetails`, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -46,7 +46,7 @@ export const addStaff = (staff: Staff) => {
   return async (dispatch: Dispatch) => {
     try {
       const newStaff = await axios.post<Staff>(
-        `${BASE_URL}/admin-service/addStaff`,
+        `/admin-service/addStaff`,
         JSON.stringify(staff),
         {
           headers: {
@@ -72,7 +72,7 @@ export const updateStaff = (staff: Staff) => {
   return async (dispatch: Dispatch) => {
     try {
       const updatedStaff = await axios.post<Staff>(
-        `${BASE_URL}/admin-service/updateStaff`,
+        `/admin-service/updateStaff`,
         staff,
         {
           headers: {
@@ -96,7 +96,7 @@ export const deleteStaffSuccess = (staff: Staff) => ({
 export const deleteStaff = (staff: Staff) => {
   return async (dispatch: Dispatch) => {
     try {
-      await axios.post(`${BASE_URL}/admin-service/deleteStaff`, staff, {
+      await axios.post(`/admin-service/deleteStaff`, staff, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -120,13 +120,13 @@ export const toggleStaffStatus = (staff: Staff) => {
       let newStatus = staff.isActive === 'Y' ? 'N' : 'Y';
 
       if (newStatus === 'Y') {
-        await axios.post(`${BASE_URL}/admin-service/activateStaff`, staff, {
+        await axios.post(`/admin-service/activateStaff`, staff, {
           headers: {
             Authorization: `${TOKEN}`,
           },
         });
       } else {
-        await axios.post(`${BASE_URL}/admin-service/deactivateStaff`, staff, {
+        await axios.post(`/admin-service/deactivateStaff`, staff, {
           headers: {
             Authorization: `${TOKEN}`,
           },

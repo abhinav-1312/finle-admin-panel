@@ -24,7 +24,7 @@ export default function ResponsiveDrawer(props: Props) {
     setDrawerWidth(0);
   };
   const container =
-    window !== undefined ? () => window().document.body : undefined;
+    window !== undefined ? () => window().document.body : undefined
 
   return (
     <>
@@ -78,7 +78,7 @@ export default function ResponsiveDrawer(props: Props) {
             padding: 5,
             height: "100%",
             width: "100%",
-            overflow: "scroll",
+            overflow: "scroll !important",
           }}
         >
           {children}

@@ -28,7 +28,7 @@ export const fetchDealersSuccess = (dlrList: Dealer[]) => ({
 export const fetchDealers = () => {
   return async (dispatch: Dispatch) => {
     try {
-      const response = await axios.get<any>(`${BASE_URL}/admin-service/getDealerDetails`, {
+      const response = await axios.get<any>(`/admin-service/getDealerDetails`, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -56,7 +56,7 @@ export const addDealer = (dlr: Dealer) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await axios.post<Dealer>(
-        `${BASE_URL}/admin-service/addDealer`,
+        `/admin-service/addDealer`,
         JSON.stringify(dlr),
         {
           headers: {
@@ -86,7 +86,7 @@ export const updateDealer = (dlr: Dealer) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await axios.post<Dealer>(
-        `${BASE_URL}/admin-service/updateDealer`,
+        `/admin-service/updateDealer`,
         dlr,
         {
           headers: {
@@ -114,7 +114,7 @@ export const deleteDealerSuccess = (dlr: Dealer) => ({
 export const deleteDealer = (dlr: Dealer) => {
   return async (dispatch: Dispatch) => {
     try {
-      await axios.post(`${BASE_URL}/admin-service/deleteDealer`, dlr, {
+      await axios.post(`/admin-service/deleteDealer`, dlr, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -141,13 +141,13 @@ export const toggleDealerStatus = (dlr: Dealer) => {
       let newStatus = dlr.isActive === 'Y' ? 'N' : 'Y';
 
       if (newStatus === 'Y') {
-        await axios.post(`${BASE_URL}/admin-service/activateDealer`, dlr, {
+        await axios.post(`/admin-service/activateDealer`, dlr, {
           headers: {
             Authorization: `${TOKEN}`,
           },
         });
       } else {
-        await axios.post(`${BASE_URL}/admin-service/deactivateDealer`, dlr, {
+        await axios.post(`/admin-service/deactivateDealer`, dlr, {
           headers: {
             Authorization: `${TOKEN}`,
           },

@@ -11,7 +11,7 @@ export const fetchLoanDetailSuccess = (allLoanDetailList: any[]) => ({
 export const fetchLoanDetail = () => {
     return async (dispatch: Dispatch) => {
         try{
-            const response = await axios.get(`${BASE_URL}/user-service/allLoanDetails`, {
+            const response = await axios.get(`/user-service/allLoanDetails`, {
                 headers: {
                   Authorization: TOKEN,
                 },

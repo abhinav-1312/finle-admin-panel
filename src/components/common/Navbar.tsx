@@ -55,7 +55,7 @@ const Navbar: React.FC<AppBarProps> = ({ handleDrawerOpen, drawerWidth }) => {
             edge="start"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <MenuIcon /> 
             {/* <DragHandleIcon /> */}
           </IconButton>
 

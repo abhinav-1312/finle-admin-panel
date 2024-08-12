@@ -70,9 +70,9 @@ const LoanTable: React.FC<LoanTableProps> = ({
         </Button>
       ),
     },
-    { field: "nbfcId", headerName: "NBFC ID", width: 150 },
-    { field: "userId", headerName: "User ID", width: 150 },
-    { field: "loanStatus", headerName: "Loan Status", width: 150 },
+    { field: "nbfcId", headerName: "NBFC ID", width: 120 },
+    { field: "userId", headerName: "User ID", width: 120 },
+    { field: "loanStatus", headerName: "Loan Status", width: 100 },
     { field: "remarks", headerName: "Remarks", width: 150 },
     // { field: "createdBy", headerName: "Created By", width: 150 },
     { field: "createdDate", headerName: "Created Date", width: 150 },
@@ -80,7 +80,7 @@ const LoanTable: React.FC<LoanTableProps> = ({
     {
       field: "action",
       headerName: "Action",
-      width: 230,
+      width: 500,
       renderCell: (params) => (
         <Stack spacing={2} direction="row">
           {showApproveButton && (
@@ -113,6 +113,14 @@ const LoanTable: React.FC<LoanTableProps> = ({
               Reject
             </Button>
           )}
+            <Button
+              variant="outlined"
+              onClick={() => alert('Button functionality in progress.')
+              }
+              color="info"
+            >
+              Need additional info
+            </Button>
         </Stack>
       ),
     },

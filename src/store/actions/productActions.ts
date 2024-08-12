@@ -30,7 +30,7 @@ export const fetchProducts = () => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await axios.get<{ responseData: Product[] }>(
-        `${BASE_URL}/admin-service/getAllProductDetails`,
+        `/admin-service/getAllProductDetails`,
         {
           headers: {
             Authorization: TOKEN,
@@ -59,7 +59,7 @@ export const addProduct = (product: Product) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await axios.post<Product>(
-        `${BASE_URL}/admin-service/addProduct`,
+        `/admin-service/addProduct`,
         product,
         {
           headers: {
@@ -86,7 +86,7 @@ export const updateProduct = (product: Product) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await axios.post<Product>(
-        `${BASE_URL}/admin-service/updateProduct`,
+        `/admin-service/updateProduct`,
         product,
         {
           headers: {
@@ -113,7 +113,7 @@ export const deleteProduct = (product: Product) => {
   return async (dispatch: Dispatch) => {
     try {
       await axios.post(
-        `${BASE_URL}/admin-service/deleteProduct`,
+        `/admin-service/deleteProduct`,
         product,
         {
           headers: {
@@ -143,7 +143,7 @@ export const toggleProductStatus = (product: Product) => {
 
       if (newStatus === "Y") {
         await axios.post(
-          `${BASE_URL}/admin-service/activateProduct`,
+          `/admin-service/activateProduct`,
           product,
           {
             headers: {
@@ -153,7 +153,7 @@ export const toggleProductStatus = (product: Product) => {
         );
       } else {
         await axios.post(
-          `${BASE_URL}/admin-service/deactivateProduct`,
+          `/admin-service/deactivateProduct`,
           product,
           {
             headers: {

@@ -10,8 +10,11 @@ import Login from "./auth/Login";
 import Layout from "./components/common/Layout";
 import AppRoutes from "./routes/Routes";
 import { BrowserRouter as Router } from "react-router-dom";
+import axios from "axios";
 
 const MAX_IDLE_TIME = 3 * 60 * 60 * 1000; 
+
+axios.defaults.baseURL = 'https://finle-api-gateway.azurewebsites.net'
 
 const App: React.FC = () => {
   const [userRole, setUserRole] = useState("");

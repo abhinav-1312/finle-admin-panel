@@ -40,7 +40,9 @@ const GPForm: React.FC<GPFormProps> = ({ gp, onSubmit }) => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    onSubmit(formValues);
+    const isConfirmed = window.confirm('Are you sure you want to perform the action?');
+    if(isConfirmed)
+      onSubmit(formValues);
   };
 
   return (

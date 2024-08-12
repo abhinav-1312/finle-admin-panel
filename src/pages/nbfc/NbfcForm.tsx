@@ -40,8 +40,9 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    console.log("FOrmvalue: ", formValues)
-    onSubmit(formValues);
+    const isConfirmed = window.confirm('Are you sure you want to perform the action?');
+    if(isConfirmed)
+      onSubmit(formValues);
   };
 
   return (

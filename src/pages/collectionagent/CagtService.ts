@@ -12,7 +12,7 @@ import {BASE_URL} from "../../utils/BaseUrl";
 
 export const fetchCagts = async (): Promise<Cagt[]> => {
   try {
-    const response = await axios.get<Cagt[]>(`${BASE_URL}/cagt`);
+    const response = await axios.get<Cagt[]>(`/cagt`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -22,7 +22,7 @@ export const fetchCagts = async (): Promise<Cagt[]> => {
 
 export const addCagt = async (cagt: Cagt): Promise<Cagt> => {
   try {
-    const response = await axios.post<Cagt>(`${BASE_URL}/cagt`, cagt);
+    const response = await axios.post<Cagt>(`/cagt`, cagt);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -32,7 +32,7 @@ export const addCagt = async (cagt: Cagt): Promise<Cagt> => {
 
 export const updateCagt = async (cagt: Cagt): Promise<Cagt> => {
   try {
-    const response = await axios.put<Cagt>(`${BASE_URL}/cagt/${cagt.Id}`, cagt);
+    const response = await axios.put<Cagt>(`/cagt/${cagt.Id}`, cagt);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -42,7 +42,7 @@ export const updateCagt = async (cagt: Cagt): Promise<Cagt> => {
 
 export const deleteCagt = async (CagtId: number): Promise<void> => {
   try {
-    await axios.delete(`${BASE_URL}/cagt/${CagtId}`);
+    await axios.delete(`/cagt/${CagtId}`);
   } catch (error) {
     console.error(error);
     throw new Error("Failed to delete Cagt");
@@ -51,7 +51,7 @@ export const deleteCagt = async (CagtId: number): Promise<void> => {
 
 export const blockCagt = async (CagtId: number): Promise<void> => {
   try {
-    await axios.put(`${BASE_URL}/cagt/${CagtId}/block`);
+    await axios.put(`/cagt/${CagtId}/block`);
   } catch (error) {
     console.error(error);
     throw new Error("Failed to block Cagt");
@@ -60,7 +60,7 @@ export const blockCagt = async (CagtId: number): Promise<void> => {
 
 export const unblockCagt = async (CagtId: number): Promise<void> => {
   try {
-    await axios.put(`${BASE_URL}/cagt/${CagtId}/unblock`);
+    await axios.put(`/cagt/${CagtId}/unblock`);
   } catch (error) {
     console.error(error);
     throw new Error("Failed to unblock Cagt");

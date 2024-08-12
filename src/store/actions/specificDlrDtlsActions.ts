@@ -22,7 +22,7 @@ export const fetchDlrDtls = (dlrDtls: []) => ({
 export const fetchspecificDlrDtls = (partnerId: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      const response = await axios.get<any>(`${BASE_URL}/collection-service/getCollectionDetails`, {
+      const response = await axios.get<any>(`/collection-service/getCollectionDetails`, {
         headers: {
           Authorization: `${TOKEN}`,
         },

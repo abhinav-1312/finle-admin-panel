@@ -28,7 +28,7 @@ export const fetchNBFCsSuccess = (nbfcList: NBFC[]) => ({
 export const fetchNBFCs = () => {
   return async (dispatch: Dispatch) => {
     try {
-      const response = await axios.get<any>(`${BASE_URL}/admin-service/getNBFCDetails`, {
+      const response = await axios.get<any>(`/admin-service/getNBFCDetails`, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -52,7 +52,7 @@ export const addNBFC = (nbfc: NBFC) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await axios.post<NBFC>(
-        `${BASE_URL}/admin-service/addNBFC`,
+        `/admin-service/addNBFC`,
         JSON.stringify(nbfc),
         {
           headers: {
@@ -83,7 +83,7 @@ export const updateNBFC = (nbfc: NBFC) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await axios.post<NBFC>(
-        `${BASE_URL}/admin-service/updateNBFC`,
+        `/admin-service/updateNBFC`,
         nbfc,
         {
           headers: {
@@ -110,7 +110,7 @@ export const deleteNBFCSuccess = (nbfc: NBFC) => ({
 export const deleteNBFC = (nbfc: NBFC) => {
   return async (dispatch: Dispatch) => {
     try {
-      await axios.post(`${BASE_URL}/admin-service/deleteNBFC`, nbfc, {
+      await axios.post(`/admin-service/deleteNBFC`, nbfc, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -136,13 +136,13 @@ export const toggleNBFCStatus = (nbfc: NBFC) => {
       let newStatus = nbfc.isActive === 'Y' ? 'N' : 'Y';
 
       if (newStatus === 'Y') {
-        await axios.post(`${BASE_URL}/admin-service/activateNBFC`, nbfc, {
+        await axios.post(`/admin-service/activateNBFC`, nbfc, {
           headers: {
             Authorization: `${TOKEN}`,
           },
         });
       } else {
-        await axios.post(`${BASE_URL}/admin-service/deactivateNBFC`, nbfc, {
+        await axios.post(`/admin-service/deactivateNBFC`, nbfc, {
           headers: {
             Authorization: `${TOKEN}`,
           },

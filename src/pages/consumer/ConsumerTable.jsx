@@ -8,10 +8,12 @@ sharing or distribution without prior written consent from the copyright holder<
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { BASE_URL, TOKEN } from "../../utils/BaseUrl";
-import { Box, Button, Card, CardContent, IconButton, Modal, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, FormControl, IconButton, InputLabel, Modal, Select, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Edit } from "@mui/icons-material";
+import { stateCityData } from "./stateCityMapping";
+import MenuItem from '@mui/material/MenuItem';
 
 const style = {
   position: "absolute",
@@ -38,7 +40,7 @@ const ConsumerTable = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/user-service/getAllUserDetails`, {}, {
+      const response = await axios.post(`/user-service/getAllUserDetails`, {}, {
         headers: {
           Authorization: TOKEN,
         },
@@ -69,11 +71,9 @@ const ConsumerTable = () => {
 
   const editConsumer = (obj) => {
     console.log("Obj: ", obj)
-    setConsumerFormData({...obj, email: obj.emailId})
+    setConsumerFormData({...obj, email: obj.emailId, category: obj.userType})
     setModalOpen(true)
   }
-
-  console.log("cfd: ", consumerFormData) 
 
   const filteredUsers = searchTerm
     ? users.filter((user) =>
@@ -123,21 +123,45 @@ const ConsumerTable = () => {
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
+    console.log("Name: ", name, " Value: ", value)
     setConsumerFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  console.log("Form data: ", consumerFormData)
+
+  const handleCityClick = () => {
+    if(!consumerFormData?.state)
+        alert("Please select state to select a city.")
+  }
+
   const handleFormSubmit = async (e) => {
     e.preventDefault()
-    const url = "https://finle-user-service.azurewebsites.net/user-service/updateUser"
-    try{
-      await axios.post(url, consumerFormData)
-      alert("Consumer data editted successfully!")
-    }catch(error){
-      console.log("Error on edit.", error)
-      alert("Error on editing consumer. Please try again!")
-    }
-    finally{
-      setModalOpen(false)
+    const isConfirmed = window.confirm('Are you sure you want to perform the action?');
+    if(isConfirmed){
+      delete consumerFormData['id']
+      delete consumerFormData['emailId']
+      delete consumerFormData['userType']
+      delete consumerFormData['password']
+      delete consumerFormData['tokenDto']
+      delete consumerFormData['createdBy']
+      delete consumerFormData['createdDate']
+      delete consumerFormData['loanId']
+      delete consumerFormData['userMode']
+      delete consumerFormData['active']
+      delete consumerFormData['adminFlag']
+  
+      console.log("Consumer form data submit: ", consumerFormData)
+      const url = "https://finle-user-service.azurewebsites.net/user-service/updateUser"
+      try{
+        await axios.post(url, consumerFormData)
+        alert("Consumer data editted successfully!")
+      }catch(error){
+        console.log("Error on edit.", error)
+        alert("Error on editing consumer. Please try again!")
+      }
+      finally{
+        setModalOpen(false)
+      }
     }
   }
 
@@ -185,7 +209,7 @@ const ConsumerTable = () => {
         <Box sx={{...style}}>
           <Typography variant="h6">Edit Consumer</Typography>
 
-          <form onSubmit={handleFormSubmit} style={{display: "grid", gridTemplateColumns: "repeat(auto-fit(min-max(220px, 1fr)))", gap: "1rem"}}>
+          <form onSubmit={handleFormSubmit} style={{display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(15rem, 1fr))", gap: "1rem"}}>
             <TextField
               label="firstName"
               variant="outlined"
@@ -204,7 +228,7 @@ const ConsumerTable = () => {
               label="email"
               variant="outlined"
               name="email"
-              value={consumerFormData?.emailId}
+              value={consumerFormData?.email}
               onChange={handleFormChange}
             />
             <TextField
@@ -212,6 +236,91 @@ const ConsumerTable = () => {
               variant="outlined"
               name="mobileNumber"
               value={consumerFormData?.mobileNumber}
+              onChange={handleFormChange}
+            />
+            <TextField
+              label="Address Line First"
+              variant="outlined"
+              name="addressLineFirst"
+              value={consumerFormData?.addressLineFirst}
+              onChange={handleFormChange}
+            />
+            {/* <TextField
+              label="Address Line First"
+              variant="outlined"
+              name="addressLineFirst"
+              value={consumerFormData?.addressLineFirst}
+              onChange={handleFormChange}
+            /> */}
+            <TextField
+              label="Address Line Second"
+              variant="outlined"
+              name="addressLineSecond"
+              value={consumerFormData?.addressLineSecond}
+              onChange={handleFormChange}
+            />
+            <TextField
+              label="Pincode"
+              variant="outlined"
+              name="pinCode"
+              value={consumerFormData?.pinCode}
+              onChange={handleFormChange}
+            />
+            {/* <TextField
+              label="State"
+              variant="outlined"
+              name="state"
+              value={consumerFormData?.state}
+              onChange={handleFormChange}
+            /> */}
+
+
+<FormControl fullWidth>
+  <InputLabel id="demo-simple-select-label">State</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    name="state"
+    id="demo-simple-select"
+    value={consumerFormData?.state}
+    label="State"
+    onChange={handleFormChange}
+  >
+    {Object.keys(stateCityData)?.map((state) => (
+      <MenuItem key={state} value={state}>{state}</MenuItem>
+    ))}
+  </Select>
+</FormControl>
+<FormControl fullWidth>
+  <InputLabel id="demo-simple-select-label">City</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    name='city'
+    id="demo-simple-select"
+    value={consumerFormData?.city}
+    label="city"
+    disabled={!consumerFormData?.state}
+    onClick={handleCityClick}
+    onChange={handleFormChange}
+  >
+    {stateCityData[consumerFormData?.state]?.map((city) => (
+      <MenuItem key={city} value={city}>{city}</MenuItem>
+    ))}
+  </Select>
+</FormControl>
+
+
+            {/* <TextField
+              label="City"
+              variant="outlined"
+              name="city"
+              value={consumerFormData?.city}
+              onChange={handleFormChange}
+            /> */}
+            <TextField
+              label="Remarks"
+              variant="outlined"
+              name="remarks"
+              value={consumerFormData?.remarks}
               onChange={handleFormChange}
             />
             <Button variant="contained" type="submit">

@@ -45,7 +45,7 @@ export default function SignIn() {
     event.preventDefault();
     try {
       const response: AxiosResponse = await axios.post(
-        `${BASE_URL}/auth-service/login`,
+        `/auth-service/login`,
         {
           mobileNumber: value === 0 ? mobileLogin : null,
           password: password,
@@ -72,7 +72,7 @@ export default function SignIn() {
     const userId = localStorage.getItem("userId");
     try {
       const response = await axios.post(
-        `${BASE_URL}/user-service/userDetails`,
+        `/user-service/userDetails`,
         {
           userId,
         },

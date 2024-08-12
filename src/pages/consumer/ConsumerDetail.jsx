@@ -2,6 +2,8 @@ import { Button, Card, CardContent } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import PdfImgViewer from '../../components/PdfImgViewer'
+import DocumentDrawer from '../../components/DocumentDrawer'
 
 const ConsumerDetail = ({dataFor}) => {
     const navigate = useNavigate()
@@ -25,8 +27,6 @@ const ConsumerDetail = ({dataFor}) => {
 
     useEffect(() => {
         fetchDetails()
-
-        
     }, [])
 
     if(!data){
@@ -38,6 +38,7 @@ const ConsumerDetail = ({dataFor}) => {
     const handleGoBackClick = () => {
         navigate(fromLoc, {state: {dataFor: dataFor || null}})
     }
+
   return (
     <Card>
         <CardContent>
@@ -45,10 +46,6 @@ const ConsumerDetail = ({dataFor}) => {
             <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
                 <h1>Consumer Details</h1>
                 <div>
-                {/* <Link to="/" state={{ from: window.location.pathname }}>
-  <Button variant="outlined" color="warning">Go to Current Page</Button>
-</Link> */}
-
                 <Button
             variant="outlined"
             color="warning"
@@ -58,6 +55,7 @@ const ConsumerDetail = ({dataFor}) => {
             >
             Go back
           </Button>
+
                 </div>
             </div>
                 <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.5rem"}}>
@@ -350,6 +348,8 @@ const ConsumerDetail = ({dataFor}) => {
                             </div>
                         </div>
                     </div>
+
+                    <DocumentDrawer docData={data?.documentDetails?.uploadedDocDetailsDtoList} userId={data.userId} downloadOptionEnabled={false} />
                 </div>
             </div>
         </CardContent>

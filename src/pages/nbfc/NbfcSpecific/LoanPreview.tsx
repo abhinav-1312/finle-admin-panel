@@ -8,7 +8,8 @@ sharing or distribution without prior written consent from the copyright holder<
 /* eslint-disable @typescript-eslint/no-redeclare */
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useReactToPrint } from 'react-to-print';
+import { useReactToPrint } from "react-to-print";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import axios from "axios";
 import {
   Typography,
@@ -22,6 +23,8 @@ import {
 import "./LoanPreview.scss";
 import { BASE_URL, TOKEN } from "../../../utils/BaseUrl";
 import { Link } from "react-router-dom";
+import { apiCall, convertToDDMMYYYY } from "../../../utils/UtilFunctions";
+import DocumentDrawer from "../../../components/DocumentDrawer";
 
 type Field = {
   label: string;
@@ -70,12 +73,14 @@ const Field: React.FC<FieldProps> = ({ label, value }) => (
 );
 
 const LoanPreview: React.FC = () => {
-  const componentRef = useRef(null)
+  const componentRef = useRef(null);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const loanId = searchParams.get("loanId");
   const userId = searchParams?.get("userId");
   const [loanDetails, setLoanDetails] = useState<any>(null);
+  const [loanPayment, setLoanPayment] = useState<any>(null);
+  const [drawerOpen, setDrawerOpen] = useState<any>(false);
   const [evScore, setEvScore] = useState<any>(null);
   const [downloadFormat, setDownloadFormat] = useState<string>("html");
   const [documentPreviews, setDocumentPreviews] = useState<{
@@ -99,19 +104,76 @@ const LoanPreview: React.FC = () => {
         loanId: loanId,
       };
 
-      const response = await axios.get(`${BASE_URL}/user-service/loanDetails`, {
-        headers: auth,
-        params: queryparams,
-      });
+      // const response = await axios.get(`/user-service/loanDetails`, {
+      //   headers: auth,
+      //   params: queryparams,
+      // });
 
-      setLoanDetails(response.data.responseData);
-      fetchDocumentPreviews(
-        response.data.responseData.documentDetails.uploadedDocDetailsDtoList
-      );
+      const loanDetailsUrl = `/user-service/loanDetails?userId=${userId}&loanId=${loanId}`;
+      const loanPaymentUrl = `/collection-service/getLoanPaymentDetails?userId=${userId}&loanId=${loanId}`;
+
+      const [loanDetailsRes, loanPaymentDataRes] = await Promise.all([
+        apiCall("GET", loanDetailsUrl),
+        apiCall("GET", loanPaymentUrl),
+      ]);
+
+      // filter payment date  data
+      const currentDate = new Date();
+      const currentYear = currentDate.getUTCFullYear();
+      const currentMonth = currentDate.getUTCMonth();
+      // const loanPaymentData = {...loanPaymentDataRes?.responseData,
+      //   loanEmiDetailsDtoList: loanPaymentDataRes?.responseData?.loanEmiDetailsDtoList?.filter((record:any) =>{
+      //     const paymentDate = new Date(record.loanEmiPaymentDate);
+      //     const paymentYear = paymentDate.getUTCFullYear();
+      //     const paymentMonth = paymentDate.getUTCMonth();
+
+      //     // Check if the payment year is less than or equal to the current year
+      //     // and the payment month is less than or equal to the current month if the year is the same
+      //     return (paymentYear < currentYear) ||
+      //           (paymentYear === currentYear && paymentMonth <= currentMonth);
+
+      //     })
+      //   }
+
+      const loanPaymentData = {
+        ...loanPaymentDataRes?.responseData,
+        loanEmiDetailsDtoList:
+          loanPaymentDataRes?.responseData?.loanEmiDetailsDtoList
+            ?.filter((record: any) => {
+              const paymentDate = new Date(record.loanEmiPaymentDate);
+              const paymentYear = paymentDate.getUTCFullYear();
+              const paymentMonth = paymentDate.getUTCMonth();
+
+              // Check if the payment year is less than or equal to the current year
+              // and the payment month is less than or equal to the current month if the year is the same
+              return (
+                paymentYear < currentYear ||
+                (paymentYear === currentYear && paymentMonth <= currentMonth)
+              );
+            })
+            ?.map((record: any) => {
+              // Add the new key-value pair
+              return {
+                ...record, // Spread existing properties
+                id: record.loanEmiId, // Add the new key-value pair here
+              };
+            }),
+      };
+
+      console.log("dsnf: ", loanPaymentData);
+
+      setLoanDetails(loanDetailsRes.responseData);
+      console.log("setign loan payment");
+      setLoanPayment({ ...loanPaymentData });
+      // fetchDocumentPreviews(
+      //   loanDetailsRes.responseData.documentDetails.uploadedDocDetailsDtoList
+      // );
     } catch (error) {
       console.error(error);
     }
   };
+
+  console.log(loanPayment);
 
   const fetchEVScoreDetails = async () => {
     try {
@@ -119,7 +181,7 @@ const LoanPreview: React.FC = () => {
         Authorization: TOKEN,
       };
       const response = await axios.get(
-        `${BASE_URL}/user-service/getEVScore?userId=${userId}&loanId=${loanId}`,
+        `/user-service/getEVScore?userId=${userId}&loanId=${loanId}`,
         {
           headers: auth,
         }
@@ -130,47 +192,44 @@ const LoanPreview: React.FC = () => {
     }
   };
 
-  const fetchDocumentPreviews = async (documents: any[]) => {
-    if(!documents){
-      return
-    }
-    try {
-      for (const doc of documents) {
-        const token = localStorage.getItem("token");
-        const auth = {
-          Authorization: token,
-        };
+  // const fetchDocumentPreviews = async (documents: any[]) => {
+  //   if (!documents) {
+  //     return;
+  //   }
+  //   try {
+  //     for (const doc of documents) {
+  //       const token = localStorage.getItem("token");
+  //       const auth = {
+  //         Authorization: token,
+  //       };
 
-        const response = await axios.get(
-          `${BASE_URL}/user-service/downloadDocument`,
-          {
-            headers: auth,
-            params: {
-              userId: userId,
-              vrfCode: doc.vrfCode,
-              vrfsCode: doc.vrfsCode,
-            },
-            responseType: "blob",
-          }
-        );
+  //       const response = await axios.get(`/user-service/downloadDocument`, {
+  //         headers: auth,
+  //         params: {
+  //           userId: userId,
+  //           vrfCode: doc.vrfCode,
+  //           vrfsCode: doc.vrfsCode,
+  //         },
+  //         responseType: "blob",
+  //       });
 
-        if (response.status === 200) {
-          const documentBlob = new Blob([response.data], {
-            type: "application/pdf",
-          });
-          const documentUrl = URL.createObjectURL(documentBlob);
-          setDocumentPreviews((prevPreviews) => ({
-            ...prevPreviews,
-            [doc.docName]: documentUrl,
-          }));
-        } else {
-          console.error("Document download failed:", response.status);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching document previews:", error);
-    }
-  };
+  //       if (response.status === 200) {
+  //         const documentBlob = new Blob([response.data], {
+  //           type: "application/pdf",
+  //         });
+  //         const documentUrl = URL.createObjectURL(documentBlob);
+  //         setDocumentPreviews((prevPreviews) => ({
+  //           ...prevPreviews,
+  //           [doc.docName]: documentUrl,
+  //         }));
+  //       } else {
+  //         console.error("Document download failed:", response.status);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching document previews:", error);
+  //   }
+  // };
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -244,6 +303,28 @@ const LoanPreview: React.FC = () => {
 
   if (!loanDetails) {
     return <div>Loading...</div>;
+  }
+
+  if(drawerOpen){
+    return (
+      <Card> 
+        <CardContent>
+        <div className="hide-comp">
+            <Button
+              variant="outlined"
+              color="warning"
+              // component={Link}
+              // to="/NbfcLoanDetails"
+              onClick={()=>setDrawerOpen(false)}
+            >
+              Go back
+            </Button>
+          </div>
+
+          <DocumentDrawer userId={userId} docData={loanDetails?.documentDetails?.uploadedDocDetailsDtoList} downloadOptionEnabled={true} />
+        </CardContent>
+      </Card>
+    )
   }
 
   const personalDetailsFields: Field[] = [
@@ -336,21 +417,111 @@ const LoanPreview: React.FC = () => {
     }
   };
 
+  const loanPaymentColums: GridColDef[] = [
+    {
+      field: "loanEmiNumber",
+      headerName: "Loan EMI No.",
+    },
+    {
+      field: "loanEmiPaymentDate",
+      headerName: "Payment Date",
+      renderCell: (params: any) =>
+        convertToDDMMYYYY(params.row.loanEmiPaymentDate),
+      width: 120,
+    },
+    {
+      field: "loanCurrentBalance",
+      headerName: "Current Loan Balance",
+      width: 160,
+    },
+    {
+      field: "loanEmiAmount",
+      headerName: "Amount",
+      width: 120,
+    },
+    {
+      field: "loanEmiPrincipal",
+      headerName: "Principal",
+      width: 120,
+    },
+    {
+      field: "loanEmiInterest",
+      headerName: "Interest",
+      width: 120,
+    },
+    {
+      field: "loanEmiStatus",
+      headerName: "Status",
+      width: 120,
+    },
+  ];
+
+  const loanPaymentDetailsField: Field[] = [
+    {
+      label: "Loan Type",
+      value: loanPayment?.loanType,
+    },
+    {
+      label: "Loan EMI Frequency",
+      value: loanPayment?.loanEmiFrequency,
+    },
+    {
+      label: "Loan Amount",
+      value: loanPayment?.loanAmount,
+    },
+    {
+      label: "Loan Interest Amount",
+      value: loanPayment?.loanInterest,
+    },
+    {
+      label: "Due Amount",
+      value: loanPayment?.loanTotalDueAmount,
+    },
+    {
+      label: "Rate of Interest",
+      value: loanPayment?.rateOfInterest + "%",
+    },
+    {
+      label: "Loan Status",
+      value: loanPayment?.loanStatus,
+    },
+    {
+      label: "EMI Payment Mode",
+      value: loanPayment?.loanEmiPaymentMode,
+    },
+    {
+      label: "Loan Tenure (in months)",
+      value: loanPayment?.loanTenure,
+    },
+    {
+      label: "E-Nach Status",
+      value: loanPayment?.emandateStatus || 'N/A'
+    },
+  ];
+
   return (
     <div ref={componentRef}>
       <Card>
         <CardContent>
           <div className="hide-comp">
-
-          <Button
-            variant="outlined"
-            color="warning"
-            component={Link}
-            to="/NbfcLoanDetails"
+            <Button
+              variant="outlined"
+              color="warning"
+              component={Link}
+              to="/NbfcLoanDetails"
             >
-            Go back
-          </Button>
-            </div>
+              Go back
+            </Button>
+            <br />
+            <br />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setDrawerOpen(true)}
+            >
+              Document Drawer
+            </Button>
+          </div>
           <div className="buttons-container hide-comp">
             <Button onClick={handlePrint}>Print</Button>
             {/* <select
@@ -366,7 +537,7 @@ const LoanPreview: React.FC = () => {
           </div>
           <div className="nbfcEvscore">
             {" "}
-            {loanDetails.personalDetails.name} EV Score :-{" "}
+            {loanDetails.personalDetails.name} EV Score : 
             <span className={getEvScoreColorClass(evScore?.evScore)}>
               {evScore?.evScore}
             </span>
@@ -426,30 +597,50 @@ const LoanPreview: React.FC = () => {
             </Grid>
 
             <Box className="section">
+              <Section title="Loan Details" fields={loanPaymentDetailsField} />
+              <DataGrid
+                rows={loanPayment?.loanEmiDetailsDtoList || []}
+                columns={loanPaymentColums}
+                autoHeight
+                // initialState={{
+                //   pagination: {
+                //     paginationModel: { page: 0, pageSize: 10 },
+                //   },
+                // }}
+                // pageSizeOptions={[5, 10, 20, 30, 50, 100]}
+              />
+            </Box>
+
+            <Box className="section">
               <Typography variant="h6" component="h3">
                 Document Details
               </Typography>
               <Divider />
               <div>
-              <Typography variant="body1" component="span">
-                <Box className="field">
-                  Adhaar No.:  {loanDetails?.documentDetails?.aadhaarNo || "N/A"}
-                </Box>
-                <Box className="field">
-                  Pan No.: {loanDetails?.documentDetails?.panNo || "N/A"}
-                </Box>
-                <Box className="field">
-                  Electricity Bill: {loanDetails?.documentDetails?.electricityBillDetailsDto || "N/A"}
-                </Box>
-              </Typography>
+                <Typography variant="body1" component="span">
+                  <Box className="field">
+                    Adhaar No.:{" "}
+                    {loanDetails?.documentDetails?.aadhaarNo || "N/A"}
+                  </Box>
+                  <Box className="field">
+                    Pan No.: {loanDetails?.documentDetails?.panNo || "N/A"}
+                  </Box>
+                  <Box className="field">
+                    Electricity Bill:{" "}
+                    {loanDetails?.documentDetails?.electricityBillDetailsDto ||
+                      "N/A"}
+                  </Box>
+                </Typography>
               </div>
               <Divider />
               <Grid container spacing={2}>
-                <Typography sx={{marginTop: "2rem"}}>Uploaded Documents: </Typography>
-                {!loanDetails?.documentDetails?.uploadedDocDetailsDtoList && 
-                  <h3 className="field">     No documents uploaded</h3>
-                }
-                {loanDetails?.documentDetails?.uploadedDocDetailsDtoList?.map(
+                <Typography sx={{ marginTop: "2rem" }}>
+                  Uploaded Documents:{" "}
+                </Typography>
+                {!loanDetails?.documentDetails?.uploadedDocDetailsDtoList && (
+                  <h3 className="field"> No documents uploaded</h3>
+                )}
+                {/* {loanDetails?.documentDetails?.uploadedDocDetailsDtoList?.map(
                   (doc: any, index: number) => (
                     <Grid item xs={6} key={index}>
                       <Box>
@@ -472,11 +663,13 @@ const LoanPreview: React.FC = () => {
                           </div>
                         )}
                       </Box>
+
                     </Grid>
                   )
-                )}
+                )} */}
               </Grid>
             </Box>
+                <DocumentDrawer docData={loanDetails?.documentDetails?.uploadedDocDetailsDtoList} userId={userId} downloadOptionEnabled={false} />
           </div>
         </CardContent>
       </Card>

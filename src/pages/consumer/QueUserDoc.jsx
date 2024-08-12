@@ -21,7 +21,7 @@ const QueUserDoc = ({ userId }) => {
     const fetchDocumentInfo = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/user-service/dealerDocuments?userId=${getUserId}`,
+          `https://finle-api-gateway.azurewebsites.net/user-service/dealerDocuments?userId=${getUserId}`,
           {
             headers: {
               Authorization: ` ${TOKEN}`,
@@ -90,7 +90,7 @@ const QueUserDoc = ({ userId }) => {
       // }
 
       const response = await fetch(
-        `${BASE_URL}/user-service/uploadDocument`,
+        `https://finle-api-gateway.azurewebsites.net/user-service/uploadDocument`,
         {
           method: "POST",
           headers: {

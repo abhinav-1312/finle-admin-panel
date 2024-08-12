@@ -13,7 +13,7 @@ export const fetchActiveCustSuccess = (activeCustList : ActiveCustomers[]) => ({
 export const fetchActiveCustomers = () => {
     return async (dispatch: Dispatch) => {
         try {
-            const response = await axios.post(`${BASE_URL}/user-service/getAllUserDetails`, {}, {
+            const response = await axios.post(`/user-service/getAllUserDetails`, {}, {
               headers: {
                 Authorization: TOKEN,
               },

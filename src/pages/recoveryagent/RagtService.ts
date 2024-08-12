@@ -11,7 +11,7 @@ import {BASE_URL,TOKEN} from "../../utils/BaseUrl";
 
 export const fetchRagts = async (): Promise<Ragt[]> => {
   try {
-    const response = await axios.get<Ragt[]>(`${BASE_URL}/ragt`);
+    const response = await axios.get<Ragt[]>(`/ragt`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -21,7 +21,7 @@ export const fetchRagts = async (): Promise<Ragt[]> => {
 
 export const addRagt = async (ragt: Ragt): Promise<Ragt> => {
   try {
-    const response = await axios.post<Ragt>(`${BASE_URL}/ragt`, ragt);
+    const response = await axios.post<Ragt>(`/ragt`, ragt);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -31,7 +31,7 @@ export const addRagt = async (ragt: Ragt): Promise<Ragt> => {
 
 export const updateRagt = async (ragt: Ragt): Promise<Ragt> => {
   try {
-    const response = await axios.put<Ragt>(`${BASE_URL}/ragt/${ragt.Id}`, ragt);
+    const response = await axios.put<Ragt>(`/ragt/${ragt.Id}`, ragt);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -41,7 +41,7 @@ export const updateRagt = async (ragt: Ragt): Promise<Ragt> => {
 
 export const deleteRagt = async (nbfcId: number): Promise<void> => {
   try {
-    await axios.delete(`${BASE_URL}/ragt/${nbfcId}`);
+    await axios.delete(`/ragt/${nbfcId}`);
   } catch (error) {
     console.error(error);
     throw new Error("Failed to delete Ragt");
@@ -50,7 +50,7 @@ export const deleteRagt = async (nbfcId: number): Promise<void> => {
 
 export const blockRagt = async (nbfcId: number): Promise<void> => {
   try {
-    await axios.put(`${BASE_URL}/ragt/${nbfcId}/block`);
+    await axios.put(`/ragt/${nbfcId}/block`);
   } catch (error) {
     console.error(error);
     throw new Error("Failed to block Ragt");
@@ -59,7 +59,7 @@ export const blockRagt = async (nbfcId: number): Promise<void> => {
 
 export const unblockRagt = async (nbfcId: number): Promise<void> => {
   try {
-    await axios.put(`${BASE_URL}/ragt/${nbfcId}/unblock`);
+    await axios.put(`/ragt/${nbfcId}/unblock`);
   } catch (error) {
     console.error(error);
     throw new Error("Failed to unblock Ragt");

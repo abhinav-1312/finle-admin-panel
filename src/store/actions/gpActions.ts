@@ -27,7 +27,7 @@ export const fetchGPsSuccess = (gpList: GP[]) => ({
 export const fetchGPs = () => {
   return async (dispatch: Dispatch) => {
     try {
-      const response = await axios.get<any>(`${BASE_URL}/admin-service/getGPDetails`, {
+      const response = await axios.get<any>(`/admin-service/getGPDetails`, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -50,7 +50,7 @@ export const addGP = (gp: GP) => {
   return async (dispatch: Dispatch) => {
     try {
       const newGP = await axios.post<GP>(
-        `${BASE_URL}/admin-service/addGP`,
+        `/admin-service/addGP`,
         JSON.stringify(gp),
         {
           headers: {
@@ -78,7 +78,7 @@ export const updateGP = (gp: GP) => {
   return async (dispatch: Dispatch) => {
     try {
       const updatedGP = await axios.post<GP>(
-        `${BASE_URL}/admin-service/updateGP`,
+        `/admin-service/updateGP`,
         gp,
         {
           headers: {
@@ -104,7 +104,7 @@ export const deleteGPSuccess = (gp: GP) => ({
 export const deleteGP = (gp: GP) => {
   return async (dispatch: Dispatch) => {
     try {
-      await axios.post(`${BASE_URL}/admin-service/deleteGP`, gp, {
+      await axios.post(`/admin-service/deleteGP`, gp, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -131,13 +131,13 @@ export const toggleGPStatus = (gp: GP) => {
       let newStatus = gp.isActive === 'Y' ? 'N' : 'Y';
 
       if (newStatus === 'Y') {
-        await axios.post(`${BASE_URL}/admin-service/activateGP`, gp, {
+        await axios.post(`/admin-service/activateGP`, gp, {
           headers: {
             Authorization: `${TOKEN}`,
           },
         });
       } else {
-        await axios.post(`${BASE_URL}/admin-service/deactivateGP`, gp, {
+        await axios.post(`/admin-service/deactivateGP`, gp, {
           headers: {
             Authorization: `${TOKEN}`,
           },

@@ -103,13 +103,6 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
           break;
   }
 
-  // const columns: GridColDef[] = [
-  //   { field: "id", headerName: "ID", width: 100 },
-  //   { field: "Name", headerName: "Name", width: 400 },
-  // ];
-
-
- /* onclick on NBFC Id */
 
   const handleIdClick = (id: any, name: string) => {
     navigate(`/dashboard/${id}`, {state: {dataFor: activeSummaryCard}});

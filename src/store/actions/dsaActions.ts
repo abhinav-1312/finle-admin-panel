@@ -28,7 +28,7 @@ export const fetchDSAsSuccess = (dsaList: DSA[]) => ({
 export const fetchDSAs = () => {
   return async (dispatch: Dispatch) => {
     try {
-      const response = await axios.get<any>(`${BASE_URL}/admin-service/getDSADetails`, {
+      const response = await axios.get<any>(`/admin-service/getDSADetails`, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -52,7 +52,7 @@ export const addDSA = (dsa: DSA) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await axios.post<DSA>(
-        `${BASE_URL}/admin-service/addDSA`,
+        `/admin-service/addDSA`,
         JSON.stringify(dsa),
         {
           headers: {
@@ -81,7 +81,7 @@ export const updateDSA = (dsa: DSA) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await axios.post<DSA>(
-        `${BASE_URL}/admin-service/updateDSA`,
+        `/admin-service/updateDSA`,
         dsa,
         {
           headers: {
@@ -108,7 +108,7 @@ export const deleteDSASuccess = (dsa: DSA) => ({
 export const deleteDSA = (dsa: DSA) => {
   return async (dispatch: Dispatch) => {
     try {
-      await axios.post(`${BASE_URL}/admin-service/deleteDSA`, dsa, {
+      await axios.post(`/admin-service/deleteDSA`, dsa, {
         headers: {
           Authorization: `${TOKEN}`,
         },
@@ -134,13 +134,13 @@ export const toggleDSAStatus = (dsa: DSA) => {
       let newStatus = dsa.isActive === 'Y' ? 'N' : 'Y';
 
       if (newStatus === 'Y') {
-        await axios.post(`${BASE_URL}/admin-service/activateDSA`, dsa, {
+        await axios.post(`/admin-service/activateDSA`, dsa, {
           headers: {
             Authorization: `${TOKEN}`,
           },
         });
       } else {
-        await axios.post(`${BASE_URL}/admin-service/deactivateDSA`, dsa, {
+        await axios.post(`/admin-service/deactivateDSA`, dsa, {
           headers: {
             Authorization: `${TOKEN}`,
           },

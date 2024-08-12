@@ -14,7 +14,7 @@ function PdfImgViewer({ userId, vrfCode, vrfsCode }) {
                 };
         
                 const response = await axios.get(
-                  `${BASE_URL}/user-service/downloadDocument`,
+                  `/user-service/downloadDocument`,
                   {
                     headers: auth,
                     params: {

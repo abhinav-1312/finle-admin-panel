@@ -1,5 +1,5 @@
 import axios from "axios"
-import { BASE_URL, TOKEN } from "./BaseUrl"
+import { TOKEN } from "./BaseUrl"
 
 export const apiCall = async (method, url, payload= null) => {
     const header = {
@@ -10,7 +10,7 @@ export const apiCall = async (method, url, payload= null) => {
     }
     if(method === "GET") {
       try{
-        const {data} = await axios.get(BASE_URL + url, header)
+        const {data} = await axios.get(url, header)
         return data
       }
       catch(error){
@@ -28,3 +28,16 @@ export const apiCall = async (method, url, payload= null) => {
       }
     }
   }
+
+  export const  convertToDDMMYYYY = (dateString) => {
+    // Create a Date object from the ISO string
+    const date = new Date(dateString);
+    
+    // Extract day, month, and year
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const year = date.getUTCFullYear();
+    
+    // Format the date as dd/mm/yyyy
+    return `${day}/${month}/${year}`;
+}
