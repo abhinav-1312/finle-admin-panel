@@ -34,6 +34,7 @@ import ConsumerDetail from "../pages/consumer/ConsumerDetail";
 import NbfcDetail from "../pages/nbfc/NbfcDetail";
 import DealerDetail from "../pages/dealer/DealerDetail";
 import NbfcDashboardDetails from "../pages/Dashboard/NbfcDealerDashboardDetails";
+import AdditionalDocRequest from "../pages/additionalDocNbfc/AdditionalDocRequest";
 // import { RouteComponentProps } from 'react-router-dom';
 
 interface LocationState {
@@ -216,6 +217,10 @@ const AppRoutes: React.FC = () => {
         <Route
           path="/dealer/:dealerId"
           element={userRole.includes(4) ? <DealerDetail /> : <PrivatePage />}
+        />
+        <Route
+          path="/additionalDocReq"
+          element={userRole.includes(4) ? <AdditionalDocRequest /> : <PrivatePage />}
         />
       </Routes>
     </>

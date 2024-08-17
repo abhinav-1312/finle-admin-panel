@@ -170,7 +170,7 @@ export const approveNbfcLoanApi = (nbfcId: string, loanId: string, remarks: stri
   };
 };
 
-export const rejectNbfcLoanApi = (nbfcId: string, loanId: string, remarks: string) => {
+export const rejectNbfcLoanApi = (nbfcId: string, loanId: string, remarks: string | null) => {
   return async (dispatch: Dispatch) => {
     try {
       const token = localStorage.getItem("token");

@@ -18,6 +18,7 @@ import specificNbfcLoanReducer from './reducers/specificNbfcLoanReducer'; // Imp
 import activeCustReducer from './reducers/totActiveCustReducer'
 import AdminDashboardReducer from './reducers/AdminDashboardReducer';
 import allLoanDetailReducer from './reducers/allLoanDetailReducer';
+import RejectedLoanNbfcWiseReducer from './reducers/rejectedLoanNbfcWiseReducer';
 
 export type RootState = {
   nbfc: ReturnType<typeof nbfcReducer>;
@@ -31,6 +32,7 @@ export type RootState = {
   totActiveCust: ReturnType<typeof activeCustReducer>;
   adminDashboard: ReturnType<typeof AdminDashboardReducer>;
   allLoanDetail: ReturnType<typeof allLoanDetailReducer>;
+  rejectedLoanDetail: ReturnType<typeof RejectedLoanNbfcWiseReducer>
 }
 
 
@@ -45,7 +47,8 @@ const rootReducer = combineReducers({
   specificNbfcLoan: specificNbfcLoanReducer, // Include the new reducer
   totActiveCust: activeCustReducer,
   adminDashboard: AdminDashboardReducer,
-  allLoanDetail: allLoanDetailReducer
+  allLoanDetail: allLoanDetailReducer,
+  rejectedLoanDetail: RejectedLoanNbfcWiseReducer
 
 });
 

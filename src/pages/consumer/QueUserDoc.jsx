@@ -80,15 +80,6 @@ const QueUserDoc = ({ userId }) => {
       formData.append("vrfCode", vrfCode);
       formData.append("vrfsCode", vrfsCode);
 
-      // console.log("FORMDATA: ", formData)
-
-      // const formData = {
-      //   file: file,
-      //   userId: localStorage.getItem("userId") || "",
-      //   vrfCode: vrfCode,
-      //   vrfsCode: vrfsCode
-      // }
-
       const response = await fetch(
         `https://finle-api-gateway.azurewebsites.net/user-service/uploadDocument`,
         {

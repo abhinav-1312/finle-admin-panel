@@ -28,7 +28,7 @@ interface LoanTableProps {
   handleOpen: (
     loanId: string,
     nbfcId: string,
-    type: "approve" | "reject"
+    type: "approve" | "reject" | "additionalInfoReq"
   ) => void;
 
   //s
@@ -115,7 +115,12 @@ const LoanTable: React.FC<LoanTableProps> = ({
           )}
             <Button
               variant="outlined"
-              onClick={() => alert('Button functionality in progress.')
+              onClick={() =>
+                handleOpen(
+                  params.row.loanId as string,
+                  params.row.nbfcId as string,
+                  "additionalInfoReq"
+                )
               }
               color="info"
             >

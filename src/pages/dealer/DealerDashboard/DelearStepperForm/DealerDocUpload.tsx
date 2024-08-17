@@ -9,7 +9,7 @@ import {
   CardActions,
   CardMedia,
 } from "@mui/material";
-import { BASE_URL, TOKEN } from "../../../../utils/BaseUrl";
+import { TOKEN } from "../../../../utils/BaseUrl";
 import { Link, useLocation } from "react-router-dom";
 import PdfImgViewer from "../../../../components/PdfImgViewer";
 
@@ -34,15 +34,9 @@ const DealerDocUpload: React.FC = () => {
   const location = useLocation();
   const { dealerId } = location.state || {};
   const { nbfcId } = location.state || {};
-
-  console.log("DEALER ID: ", dealerId)
-  console.log("Nbfc ID: ", nbfcId)
-
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFiles>({});
   const [documentInfo, setDocumentInfo] = useState<DocumentInfo[]>([]);
   const getUserId = localStorage.getItem("userId");
-  const [imageError, setImageError] = useState(false);
-  const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false)
   useEffect(() => {
     const fetchDocumentInfo = async () => {
       try {
@@ -185,9 +179,7 @@ const DealerDocUpload: React.FC = () => {
   //     console.error("Error handling download:", error);
   //   }
   // };
-  const handleImageError = () => {
-    setImageError(true);
-  };
+
 
 
 

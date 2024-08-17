@@ -135,6 +135,19 @@ const Sidebar: React.FC = () => {
             </ListItemButton>
           </ListItem>
         )}
+        {userRole.includes(4) && (
+          <ListItem
+            className={selectedItem === "additionalDocReq" ? "highlighted" : ""}
+            onClick={() => handleMenuItemClick("additionalDocReq")}
+          >
+            <ListItemButton component={Link} to="/additionalDocReq">
+              <ListItemIcon>
+                <SupervisedUserCircle />
+              </ListItemIcon>
+              <ListItemText primary="Additional Info Request" />
+            </ListItemButton>
+          </ListItem>
+        )}
 
         {userRole.includes(4) && (
           <ListItem

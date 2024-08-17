@@ -23,6 +23,7 @@ import { BASE_URL, TOKEN } from "../../utils/BaseUrl";
 import { fetchActiveCustomers } from "../../store/actions/totActiveCustActions";
 import { fetchAllNbfcLoanStatus } from "../../store/actions/AdminDashboardAction";
 import { fetchLoanDetail } from "../../store/actions/allLoanDetailActions";
+import { fetchRejectedLoan } from "../../store/actions/rejectedLoanNbfcWiseAction";
 
 interface ActiveCustomers 
 {
@@ -94,6 +95,8 @@ const Dashboard: React.FC = () => {
   const [activeSummaryCard, setActiveSummaryCard] = useState<string>("nbfc");
 
   const loanDetailList = useSelector((state: RootState) => state.allLoanDetail.allLoanDetailList)
+  // const rejectedLoanDetail = useSelector((state: RootState) => state.rejectedLoanDetail.rejectedLoanObj)
+  // console.log("REJECTED LOAN DETAIL: ", rejectedLoanDetail)
 
   const activeLoanCases = []
   const rejectedLoanCases = []
@@ -134,6 +137,7 @@ const Dashboard: React.FC = () => {
     // await dispatch(fetchActiveCustomers())
     // await dispatch(fetchAllNbfcLoanStatus())
     await dispatch(fetchLoanDetail())
+    await dispatch(fetchRejectedLoan())
   }
 
   useEffect(() => {

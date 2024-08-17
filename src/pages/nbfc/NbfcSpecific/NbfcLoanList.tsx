@@ -56,7 +56,7 @@ const NbfcLoanList: React.FC = () => {
   const [nbfcId, setNbfcId] = useState("");
   const [loanId, setLoanId] = useState("");
   const [remarks, setRemarks] = useState("");
-  const [actionType, setActionType] = useState<"approve" | "reject">("approve");
+  const [actionType, setActionType] = useState<"approve" | "reject" | "additionalInfoReq">("approve");
   const [selectedTab, setSelectedTab] = React.useState(0);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -65,7 +65,7 @@ const NbfcLoanList: React.FC = () => {
   const handleOpen = (
     loanId: string,
     nbfcId: string,
-    type: "approve" | "reject"
+    type: "approve" | "reject" | "additionalInfoReq"
   ) => {
     setLoanId(loanId);
     setNbfcId(nbfcId);
@@ -79,18 +79,28 @@ const NbfcLoanList: React.FC = () => {
     dispatch(fetchSpecificNbfcLoans());
   }, [dispatch]);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (actionType === "approve") {
-      dispatch(approveNbfcLoanApi(nbfcId, loanId, remarks));
+      await dispatch(approveNbfcLoanApi(nbfcId, loanId, remarks));
       setOpen(false);
       dispatch(fetchSpecificNbfcLoans());
 
-    } else {
-      dispatch(rejectNbfcLoanApi(nbfcId, loanId, remarks));
+    } else if(actionType === "reject") {
+      await dispatch(rejectNbfcLoanApi(nbfcId, loanId, null));
       setOpen(false);
       dispatch(fetchSpecificNbfcLoans());
       
+    }
+    else{
+      if(remarks === "" || remarks === null){
+        alert("Enter remarks.")
+      }
+      else{
+        await dispatch(rejectNbfcLoanApi(nbfcId, loanId, remarks));
+        setOpen(false);
+        dispatch(fetchSpecificNbfcLoans());
+      }
     }
   };
 
@@ -252,8 +262,9 @@ const NbfcLoanList: React.FC = () => {
                   disabled
                   className="dsa-form-input"
                 />
-
-                <TextField
+                {
+                  actionType !== "reject" &&
+                  <TextField
                   label="Remarks"
                   variant="outlined"
                   size="small"
@@ -261,7 +272,8 @@ const NbfcLoanList: React.FC = () => {
                   multiline
                   onChange={(e) => setRemarks(e.target.value)}
                   className="dsa-form-input"
-                />
+                  />
+                }
 
                 <Button variant="contained" type="submit">
                   {actionType === "approve" ? "Approve" : "Reject"}

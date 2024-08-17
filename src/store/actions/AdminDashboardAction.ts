@@ -47,7 +47,7 @@ export const fetchAllNbfcLoanStatus = () => {
     if (token) {
       try {
         // Use Promise.all to concurrently fetch loan details for all active NBFCs
-        const loanDetailsPromises = activeNbfc.map((nbfc: any) =>
+        const loanDetailsPromises = activeNbfc?.map((nbfc: any) =>
           fetchLoanDetails(nbfc.nbfcId, token)
         );
         const loanDetails = await Promise.all(loanDetailsPromises);
