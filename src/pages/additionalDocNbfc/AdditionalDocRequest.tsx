@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { fetchNBFCs } from '../../store/actions/nbfcActions'
 import { fetchRejectedLoan } from '../../store/actions/rejectedLoanNbfcWiseAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { RootState } from '../../store/store';
-import { apiCall } from '../../utils/UtilFunctions';
 import { fetchLoanDetail } from '../../store/actions/allLoanDetailActions';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Button, Card, CardContent, Typography } from '@mui/material';
@@ -13,16 +12,12 @@ const AdditionalDocRequest = () => {
     const dispatch = useDispatch<ThunkDispatch<RootState, null, any>>();
     const rejectedRemarkObj = useSelector((state: RootState) => state.rejectedLoanDetail.rejectedLoanObj)
     const loanDetailList = useSelector((state: RootState) => state.allLoanDetail.allLoanDetailList)
-    console.log("Rejected remark obj: ", rejectedRemarkObj)
     useEffect(() => {
         const util = async () => {
             await dispatch(fetchNBFCs())
             dispatch(fetchLoanDetail())
             dispatch(fetchRejectedLoan())
         }
-
-
-
         util()
     }, [dispatch])
 
@@ -43,7 +38,8 @@ const AdditionalDocRequest = () => {
       }
     })
 
-    console.log("LOAN DETAIL LIST: ", loanDetailList)
+    console.log("Add doc: ", additionalDocReqLoan)
+
     if(loanDetailList.length === 0){
       return <h1> Loading...</h1>
     }
@@ -80,8 +76,7 @@ const AdditionalDocRequest = () => {
         )
       }
     ]
-
-    // loanDetailList?.forEach(record)
+    
   return (
     <Card>
       <CardContent>

@@ -160,8 +160,6 @@ const LoanPreview: React.FC = () => {
             }),
       };
 
-      console.log("dsnf: ", loanPaymentData);
-
       setLoanDetails(loanDetailsRes.responseData);
       console.log("setign loan payment");
       setLoanPayment({ ...loanPaymentData });
@@ -172,8 +170,6 @@ const LoanPreview: React.FC = () => {
       console.error(error);
     }
   };
-
-  console.log(loanPayment);
 
   const fetchEVScoreDetails = async () => {
     try {
@@ -270,37 +266,6 @@ const LoanPreview: React.FC = () => {
     }
   };
 
-  // const handleDownload = () => {
-  //   const element = document.getElementById("loan-details-container");
-  //   if (element) {
-  //     const htmlContent = element.innerHTML;
-  //     let fileName = "loan-details";
-  //     let mimeType = "";
-
-  //     if (downloadFormat === "html") {
-  //       mimeType = "text/html";
-  //       fileName += ".html";
-  //     } else if (downloadFormat === "pdf") {
-  //       mimeType = "application/pdf";
-  //       fileName += ".pdf";
-  //     } else if (downloadFormat === "png") {
-  //       mimeType = "image/png";
-  //       fileName += ".png";
-  //     } else if (downloadFormat === "jpeg") {
-  //       mimeType = "image/jpeg";
-  //       fileName += ".jpeg";
-  //     }
-
-  //     const blob = new Blob([htmlContent], { type: mimeType });
-  //     const url = URL.createObjectURL(blob);
-  //     const link = document.createElement("a");
-  //     link.href = url;
-  //     link.download = fileName;
-  //     link.click();
-  //     URL.revokeObjectURL(url);
-  //   }
-  // };
-
   if (!loanDetails) {
     return <div>Loading...</div>;
   }
@@ -313,8 +278,6 @@ const LoanPreview: React.FC = () => {
             <Button
               variant="outlined"
               color="warning"
-              // component={Link}
-              // to="/NbfcLoanDetails"
               onClick={()=>setDrawerOpen(false)}
             >
               Go back

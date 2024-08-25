@@ -6,6 +6,7 @@ interface NBFCState {
   approvedList: NbfcLoans["approvedList"];
   rejectedList: NbfcLoans["rejectedList"];
   adminList: NbfcLoans['adminList'];
+  additionalInfoList: NbfcLoans['additionalInfoList']
 }
 
 const initialState: NBFCState = {
@@ -13,6 +14,7 @@ const initialState: NBFCState = {
   approvedList: [],
   rejectedList: [],
   adminList: [],
+  additionalInfoList: []
 };
 
 const specificNbfcLoanReducer = (state = initialState, action: any) => {
@@ -24,6 +26,7 @@ const specificNbfcLoanReducer = (state = initialState, action: any) => {
         approvedList: action.payload.approvedList,
         rejectedList: action.payload.rejectedList,
         adminList: action.payload.adminList,
+        additionalInfoList: action.payload.additionalInfoList
       };
     case APPROVE_NBFC_LOAN_SUCCESS:
       // Handle approve success if needed

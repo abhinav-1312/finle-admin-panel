@@ -1,8 +1,7 @@
 import { Button, Card, CardContent } from '@mui/material'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import PdfImgViewer from '../../components/PdfImgViewer'
 import DocumentDrawer from '../../components/DocumentDrawer'
 
 const ConsumerDetail = ({dataFor}) => {
@@ -11,9 +10,11 @@ const ConsumerDetail = ({dataFor}) => {
     const {fromLoc} = location.state || '/'
     const {userId} = useParams()
 
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
     const [data, setData] = useState(null)
 
-    const fetchDetails = async () => {
+    const fetchDetails = useCallback( async () => {
         const url = `https://finle-user-service.azurewebsites.net/user-service/loanDetails?userId=${userId}&loanId=${userId}`
         try{
             const {data} = await axios.get(url)
@@ -22,12 +23,11 @@ const ConsumerDetail = ({dataFor}) => {
         }catch(error){
             console.log("Error: ", error)
         }
-    }
-
+    }, [userId])
 
     useEffect(() => {
         fetchDetails()
-    }, [])
+    }, [fetchDetails])
 
     if(!data){
         return (
@@ -39,6 +39,28 @@ const ConsumerDetail = ({dataFor}) => {
         navigate(fromLoc, {state: {dataFor: dataFor || null}})
     }
 
+    if(drawerOpen){
+        return (
+          <Card> 
+            <CardContent>
+            <div className="hide-comp">
+                <Button
+                  variant="outlined"
+                  color="warning"
+                  // component={Link}
+                  // to="/NbfcLoanDetails"
+                  onClick={()=>setDrawerOpen(false)}
+                >
+                  Go back
+                </Button>
+              </div>
+    
+              <DocumentDrawer userId={data?.userId} docData={data?.documentDetails?.uploadedDocDetailsDtoList} downloadOptionEnabled={true} />
+            </CardContent>
+          </Card>
+        )
+      }
+
   return (
     <Card>
         <CardContent>
@@ -46,15 +68,23 @@ const ConsumerDetail = ({dataFor}) => {
             <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
                 <h1>Consumer Details</h1>
                 <div>
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setDrawerOpen(true)}
+              sx={{marginRight: "1rem"}}
+            >
+              Document Drawer
+            </Button>
                 <Button
             variant="outlined"
             color="warning"
-            // component={Link}
-            // to={fromLoc}
             onClick={()=>handleGoBackClick()}
             >
             Go back
           </Button>
+
+          
 
                 </div>
             </div>
@@ -295,9 +325,9 @@ const ConsumerDetail = ({dataFor}) => {
                 <div>
                     <h3>Approval Details</h3>
                     <div style={{display: "flex", alignItems: "center", gap: "4rem"}}>
-                        <div>
+                        {/* <div>
                             <strong>Soft Approval: </strong> {data?.approvalDetails?.softApproval || "Data Not Available"}
-                        </div>
+                        </div> */}
                         <div>
                             <strong>NBFC Approval: </strong> {data?.approvalDetails?.nbfcApproval || "Data Not Available"}
                         </div>

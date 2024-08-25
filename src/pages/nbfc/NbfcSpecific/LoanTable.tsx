@@ -25,6 +25,7 @@ interface LoanTableProps {
   loanList: Loan[];
   showApproveButton: boolean;
   showRejectButton: boolean;
+  showAdditionalInfoBtn: boolean;
   handleOpen: (
     loanId: string,
     nbfcId: string,
@@ -40,6 +41,7 @@ const LoanTable: React.FC<LoanTableProps> = ({
   showApproveButton,
   showRejectButton,
   handleOpen,
+  showAdditionalInfoBtn
 }) => {
   const navigate = useNavigate();
 
@@ -53,7 +55,7 @@ const LoanTable: React.FC<LoanTableProps> = ({
     {
       field: "loanId",
       headerName: "Loan ID",
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <Button
           variant="text"
@@ -70,13 +72,17 @@ const LoanTable: React.FC<LoanTableProps> = ({
         </Button>
       ),
     },
-    { field: "nbfcId", headerName: "NBFC ID", width: 120 },
-    { field: "userId", headerName: "User ID", width: 120 },
-    { field: "loanStatus", headerName: "Loan Status", width: 100 },
-    { field: "remarks", headerName: "Remarks", width: 150 },
+    { field: "nbfcId", headerName: "NBFC ID", width: 100 },
+    { field: "userId", headerName: "User ID", width: 100 },
+    // { field: "loanStatus", headerName: "Loan Status", width: 150 },
+    // { field: "remarks", headerName: "Remarks", width: 150 },
     // { field: "createdBy", headerName: "Created By", width: 150 },
     { field: "createdDate", headerName: "Created Date", width: 150 },
     { field: "updatedDate", headerName: "Updated Date", width: 150 },
+    { field: "remark", headerName: "Remarks", width: 150,
+      renderCell: (params) => params.row.remarks as string || ""
+    },
+
     {
       field: "action",
       headerName: "Action",
@@ -113,19 +119,23 @@ const LoanTable: React.FC<LoanTableProps> = ({
               Reject
             </Button>
           )}
-            <Button
-              variant="outlined"
-              onClick={() =>
-                handleOpen(
-                  params.row.loanId as string,
-                  params.row.nbfcId as string,
-                  "additionalInfoReq"
-                )
-              }
-              color="info"
-            >
-              Need additional info
-            </Button>
+          {
+            showAdditionalInfoBtn && (
+              <Button
+                variant="outlined"
+                onClick={() =>
+                  handleOpen(
+                    params.row.loanId as string,
+                    params.row.nbfcId as string,
+                    "additionalInfoReq"
+                  )
+                }
+                color="info"
+              >
+                Need additional info
+              </Button>
+            )
+          }
         </Stack>
       ),
     },

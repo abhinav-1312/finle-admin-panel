@@ -4,7 +4,6 @@ acknowledging that the code is provided without warranties, and strictly prohibi
 sharing or distribution without prior written consent from the copyright holder<DKG Labs Pvt. Ltd>
 ------------------------------------------------------------------------------ */
 
-
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { BASE_URL, TOKEN } from "../../utils/BaseUrl";
@@ -47,6 +46,8 @@ const QueUser = () => {
 
   const [approveBtnEnabled, setApproveBtnEnabled] = useState(true)
   const [rejBtnEnabled, setRejBtnEnabled] = useState(true)
+
+  console.log("Users: ", users)
 
   const handleApprove = async (userId, userType) => {
     setApproveBtnEnabled(false)
@@ -92,7 +93,13 @@ const QueUser = () => {
     setRejBtnEnabled(false)
     try {
       const userRemarks = prompt("Enter remarks:");
-      if (userRemarks !== null) {
+      console.log("SER REMSRK: ", userRemarks !== '')
+
+      if(userRemarks === ''){
+        alert("Please enter remark to continue.")
+        return
+      }
+
         const response = await axios.post(
           `/admin-service/reject`,
           {
@@ -113,16 +120,17 @@ const QueUser = () => {
 
         if (response.status === 200) {
           alert("Reject successfully");
-          console.log("Reject successful");
           setRejBtnEnabled(true)
           fetchUsers()
         } else {
           console.log("Failed to Reject user:", response.status, response.statusText);
           setRejBtnEnabled(true)
         }
-      }
     } catch (error) {
       console.error("Error during Reject:", error);
+      setRejBtnEnabled(true)
+    }
+    finally{
       setRejBtnEnabled(true)
     }
   };
@@ -169,8 +177,6 @@ const QueUser = () => {
     { field: "lastName", headerName: "Last Name", width: 150 },
     { field: "userType", headerName: "User Type", width: 150 },
     { field: "mobileNumber", headerName: "Mobile Number", width: 180 },
-    // { field: "userMode", headerName: "User Mode", width: 120 },
-    //  { field: "createdBy", headerName: "Created By", width: 150 },
     { field: "createdDate", headerName: "Created Date", width: 200 },
     { field: "remarks", headerName: "Remarks", width: 150 },
     {
@@ -183,7 +189,7 @@ const QueUser = () => {
         </span>
       ),
     },
-    // { field: "adminFlag", headerName: "Admin Flag", width: 120 },
+
     {
       field: "action",
       headerName: "Action",
@@ -215,8 +221,11 @@ const QueUser = () => {
     },
   ];
 
-  const pendingUsers = filteredUsers.filter((user) => !user.active);
+  const pendingUsers = filteredUsers.filter((user) => !user.active && user.remarks === null);
+  const blacklistedUsers = filteredUsers.filter((user) => !user.active && user.remarks !== null);
   const approvedUsers = filteredUsers.filter((user) => user.active);
+
+
 
   return (
     <>
@@ -224,6 +233,7 @@ const QueUser = () => {
       <Tabs value={selectedTab} onChange={handleTabChange}>
         <Tab label="Pending Users" />
         <Tab label="Approved Users" />
+        {/* <Tab label="Blacklisted Users" /> */}
       </Tabs>
       <br />
 
@@ -285,6 +295,28 @@ const QueUser = () => {
               />
             </div>
           )}
+          {/* {selectedTab === 2 && (
+            <div style={{ height: "700px", width: "100%" }}>
+              <DataGrid
+                rows={blacklistedUsers}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 10 },
+                  },
+                }}
+                getRowId={(row) => Math.random() * filteredUsers.length}
+                // autoHeight
+                style={{ maxHeight: '700px !important' }}
+                pageSizeOptions={[5, 10, 20, 30, 50, 100]}
+                // checkboxSelection
+                disableRowSelectionOnClick
+                components={{
+                  Toolbar: GridToolbar,
+                }}
+              />
+            </div>
+          )} */}
         </CardContent>
       </Card>
     </>

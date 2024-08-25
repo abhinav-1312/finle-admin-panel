@@ -27,6 +27,7 @@ export interface NbfcLoans {
   approvedList?: NbfcLoan[];
   rejectedList?: NbfcLoan[];
   adminList?: NbfcLoan[];
+  additionalInfoList?: NbfcLoan[];
 }
 
 export const fetchNbfcLoans = (nbfcLoans: NbfcLoans) => ({
@@ -64,11 +65,14 @@ export const fetchSpecificNbfcLoans = () => {
             }
           );
           const responseData = response.data.responseData;
+          const rejectedList = responseData.csrNbfcRejectedRequestList.filter((record: any) => record.remarks === '' || record.remarks === null) 
+          const additionalInfoList = responseData.csrNbfcRejectedRequestList.filter((record: any) => record.remarks !== '') 
   
           const nbfcLoans: NbfcLoans = {
             pendingList: responseData.csrNbfcPendingRequestList,
             approvedList: responseData.csrNbfcApprovedRequestList,
-            rejectedList: responseData.csrNbfcRejectedRequestList,
+            rejectedList: rejectedList,
+            additionalInfoList: additionalInfoList
           };
   
           dispatch(fetchNbfcLoans(nbfcLoans));
@@ -97,7 +101,7 @@ export const fetchSpecificNbfcLoans = () => {
             return {
               userId: res.userId,
               loanId: res.loanId,
-              loanStatus: res.applicationCompletionStatus === "Y" ? "Completed" : "Pending",
+              loanStatus: res.loanStatus,
               nbfcId: res.nbfcId,
               custName: res.personalDetails.name,
               adhaarNo: res.documentDetails.aadhaarNo,

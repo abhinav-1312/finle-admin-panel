@@ -7,13 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchLoanDetail } from "../../store/actions/allLoanDetailActions";
 import NbfcDashboardDetailTable from "./NbfcDealerDashboardDetailTable";
 
-const NbfcDealerDashboardDetails = () => {
+const NbfcDealerDashboardDetails = (props) => {
     const location = useLocation()
-    const {dataFor} = location?.state || ""
-  const { id } = useParams();
+    const dataFor = props.name ? props.name :  location?.state.dataFor
+    const params = useParams()
+  const { id } = props.id ? props : params;
   const [activeSummaryCard, setActiveSummaryCard] = useState("active");
   const dispatch = useDispatch()
-
 
   const loanDetailList = useSelector((state) => state.allLoanDetail.allLoanDetailList)
 
@@ -25,64 +25,62 @@ const NbfcDealerDashboardDetails = () => {
   const totalLoanCasesFiles = []
   const closedLoanFiles = []
 
+  const totalDealers = new Set()
+  const totalNbfc = new Set()
   loanDetailList?.forEach(record => {
     const {loanStatus, nbfcId, partnerId} = record
+    // totalDealers.add(partnerId)
+    // totalNbfc.add(nbfcId)
     
-    if(loanStatus === 'Active Loan' && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+    if(loanStatus === 'Active Loan' && (dataFor === "nbfc" ? nbfcId === id : partnerId === id)){
       activeLoanCases.push({id: record.loanId, ...record})
-    else if(loanStatus === "Rejected" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+      totalDealers.add(partnerId)
+      totalNbfc.add(nbfcId)
+    }
+    else if(loanStatus === "Rejected" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id)){
       rejectedLoanCases.push({id: record.loanId, ...record})
-    else if(loanStatus === "Pending" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
-      pendingLoanCases.push({id: record.loanId, ...record})
-    else if(loanStatus === "Awaiting Approval" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
-      awaitingApprovalFiles.push({id: record.loanId, ...record})
-    else if(loanStatus === "Incomplete" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
-      incompleteLoanFiles.push({id: record.loanId, ...record})
-    else if(loanStatus === "Closed Loan" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
-      closedLoanFiles.push({id: record.loanId, ...record})
+      totalDealers.add(partnerId)
+    totalNbfc.add(nbfcId)
 
-    if((loanStatus === "Active Loan" || loanStatus === "Closed Loan") && (dataFor === "nbfc" ? nbfcId === id : partnerId === id))
+    }
+    else if(loanStatus === "Pending" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id)){
+      pendingLoanCases.push({id: record.loanId, ...record})
+      totalDealers.add(partnerId)
+    totalNbfc.add(nbfcId)
+
+    }
+    else if(loanStatus === "Awaiting Approval" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id)){
+      awaitingApprovalFiles.push({id: record.loanId, ...record})
+      totalDealers.add(partnerId)
+    totalNbfc.add(nbfcId)
+
+    }
+    else if(loanStatus === "Incomplete" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id)){
+      incompleteLoanFiles.push({id: record.loanId, ...record})
+      totalDealers.add(partnerId)
+    totalNbfc.add(nbfcId)
+
+    }
+    else if(loanStatus === "Closed Loan" && (dataFor === "nbfc" ? nbfcId === id : partnerId === id)){
+      closedLoanFiles.push({id: record.loanId, ...record})
+      totalDealers.add(partnerId)
+    totalNbfc.add(nbfcId)
+
+    }
+
+    if((loanStatus === "Active Loan" || loanStatus === "Closed Loan") && (dataFor === "nbfc" ? nbfcId === id : partnerId === id)){
       totalLoanCasesFiles.push({id: record.loanId, ...record})
+      totalDealers.add(partnerId)
+    totalNbfc.add(nbfcId)
+
+    }
 
   })
 
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       `https://finle-user-service.azurewebsites.net/user-service/allLoanDetails?id=${id}`,
-    //       {
-    //         headers: {
-    //           Authorization: TOKEN,
-    //         },
-    //       }
-    //     );
-    //     const data = response.data.responseData;
-    //     setLoanDetails({
-    //       active: data?.csrNbfcaApprovedRequestList?.length || 0,
-    //       pending: data?.csrNbfcPendingRequestList?.length || 0,
-    //       rejected: data?.csrNbfcRejectedRequestList?.length || 0,
-    //       approved: data?.csrNbfcApprovedRequestList?.length || 0,
-    //       incomplete: data?.csrNbfcIncompleteRequestList?.length || 0,
-    //       total: data?.csrNbfcTotalRequestList?.length || 0,
-    //       close: data?.csrNbfcCloseRequestList?.length || 0,
-    //     });
-    //     setApprovedRequest(data?.csrNbfcApprovedRequestList || []);
-    //     setPendingRequest(data?.csrNbfcPendingRequestList || []);
-    //     setRejectedRequest(data?.csrNbfcRejectedRequestList || []);
-    //     setActiveRequest(data?.csrNbfcaApprovedRequestList || []);
-    //     setIncompleteRequest(data?.csrNbfcIncompleteRequestList || []);
-    //     setTotalRequest(data?.csrNbfcTotalRequestList || []);
-    //     setCloseRequest(data?.csrNbfcCloseRequestList || []);
-    //     console.log(data);
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // };
-
-    // fetchData();
-    if(!loanDetailList.length)
+    // if(!loanDetailList.length)
+      // console.log("Called")
       dispatch(fetchLoanDetail())
   }, [dispatch, loanDetailList]);
 
@@ -90,7 +88,6 @@ const NbfcDealerDashboardDetails = () => {
     setActiveSummaryCard(dataType);
   };
 
-  console.log("LOAN DETAIL LISTTTT: ", loanDetailList)
 
   const getDynamicTitle = () => {
     switch (activeSummaryCard) {
@@ -108,12 +105,12 @@ const NbfcDealerDashboardDetails = () => {
         return "Total Loan Cases";
       case "close":
         return "Close Loan Cases";
+      case "awaitingApproval":
+        return "Awaiting Approval Cases";
       default:
         return "";
     }
   };
-
-  console.log("incomplete: ", incompleteLoanFiles)
 
   const getActiveRecords = () => {
     switch (activeSummaryCard) {
@@ -131,6 +128,8 @@ const NbfcDealerDashboardDetails = () => {
         return totalLoanCasesFiles;
       case "close":
         return closedLoanFiles;
+      case "awaitingApproval":
+        return awaitingApprovalFiles;
       default:
         return [];
     }
@@ -145,6 +144,9 @@ const NbfcDealerDashboardDetails = () => {
     "#808000", // Olive
     "#4682B4", // Steel blue
   ];
+
+  console.log("Tot dealers: ", totalDealers)
+  console.log("Tot nbfc: ", totalNbfc)
 
   const summaryData = [
     {
@@ -162,11 +164,11 @@ const NbfcDealerDashboardDetails = () => {
       label: "Rejected Loan Cases",
       total: rejectedLoanCases?.length,
     },
-    // {
-    //   dataType: "approved",
-    //   label: "Approved Loan Cases",
-    //   total: loanDetails.approved,
-    // },
+    {
+      dataType: "awaitingApproval",
+      label: "Awaiting Approval",
+      total: awaitingApprovalFiles.length,
+    },
     {
       dataType: "incomplete",
       label: "Incomplete Loan Cases",
@@ -174,27 +176,36 @@ const NbfcDealerDashboardDetails = () => {
     },
     { dataType: "total", label: "Total Loan Cases", total: totalLoanCasesFiles?.length },
     { dataType: "close", label: "Close Loan Cases", total: closedLoanFiles?.length },
+    { dataType: "dealers", label: dataFor === "nbfc" ? "Total Dealers" : "Total NBFC", total: dataFor==="nbfc" ? totalDealers.size : totalNbfc.size },
   ];
 
   return (
     <>
       <div>
-        <Button
-          className="back-btn"
-          variant="outlined"
-          color="warning"
-          sx={{ width: 100 }}
-          component={Link}
-          to="/dashboard">
-          Go back
-        </Button>
+        {
+          !props && (
+            <Button
+              className="back-btn"
+              variant="outlined"
+              color="warning"
+              sx={{ width: 100 }}
+              component={Link}
+              to="/dashboard">
+              Go back
+            </Button>
+          )
+        }
       </div>
       <div className={styles.dashboard}>
-        <Box mb={3}>
-          <Typography variant="h4" className="dashboard-title" gutterBottom>
-            Loan Details 
-          </Typography>
+        {
+          !props && (
+            <Box mb={3}>
+              <Typography variant="h4" className="dashboard-title" gutterBottom>
+                Loan Details 
+              </Typography>
         </Box>
+          )
+        }
         <Grid container spacing={3}>
           {summaryData.map((data, key) => (
             <Grid item xs={12} sm={6} md={3} key={data.dataType}>

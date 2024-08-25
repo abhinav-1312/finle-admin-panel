@@ -5,7 +5,6 @@ sharing or distribution without prior written consent from the copyright holder<
 ------------------------------------------------------------------------------ */
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
@@ -52,12 +51,16 @@ const NbfcLoanList: React.FC = () => {
   const adminList = useSelector<RootState, Loan[]>(
     (state) => state.specificNbfcLoan.adminList
   );
+  const additionalInfoList = useSelector<RootState, Loan[]>(
+    (state) => state.specificNbfcLoan.additionalInfoList
+  );
   const [open, setOpen] = useState(false);
   const [nbfcId, setNbfcId] = useState("");
   const [loanId, setLoanId] = useState("");
   const [remarks, setRemarks] = useState("");
   const [actionType, setActionType] = useState<"approve" | "reject" | "additionalInfoReq">("approve");
   const [selectedTab, setSelectedTab] = React.useState(0);
+
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -118,6 +121,7 @@ const NbfcLoanList: React.FC = () => {
           handleOpen={handleOpen}
           showApproveButton={false}
           showRejectButton={false}
+          showAdditionalInfoBtn={false}
         />
 
 
@@ -186,7 +190,7 @@ const NbfcLoanList: React.FC = () => {
         <Tab label="Pending Requests" />
         <Tab label="Approved Requests" />
         <Tab label="Rejected Requests" />
-        {/* <Tab label="Admin List" /> */}
+        <Tab label="Additional Info Requested List" />
       </Tabs>
       <br />
       {selectedTab === 0 && (
@@ -196,6 +200,7 @@ const NbfcLoanList: React.FC = () => {
           handleOpen={handleOpen}
           showApproveButton={true}
           showRejectButton={true}
+          showAdditionalInfoBtn={true}
         />
       )}
 
@@ -206,6 +211,7 @@ const NbfcLoanList: React.FC = () => {
           handleOpen={handleOpen}
           showApproveButton={false}
           showRejectButton={true}
+          showAdditionalInfoBtn = {false}
         />
       )}
 
@@ -216,15 +222,18 @@ const NbfcLoanList: React.FC = () => {
           handleOpen={handleOpen}
           showApproveButton={true}
           showRejectButton={false}
+          showAdditionalInfoBtn={true}
         />
       )}
       {selectedTab === 3 && (
         <LoanTable
-          title="Loan Queue"
-          loanList={adminList}
+          title="Additional Info Request List "
+          loanList={additionalInfoList}
           handleOpen={handleOpen}
           showApproveButton={true}
-          showRejectButton={false}
+          showRejectButton={true}
+          showAdditionalInfoBtn={true}
+
         />
       )}
 
@@ -276,7 +285,7 @@ const NbfcLoanList: React.FC = () => {
                 }
 
                 <Button variant="contained" type="submit">
-                  {actionType === "approve" ? "Approve" : "Reject"}
+                  {actionType === "approve" ? "Approve" :(actionType === "reject" ? "Reject" : "Submit")}
                 </Button>
               </form>
             </CardContent>
