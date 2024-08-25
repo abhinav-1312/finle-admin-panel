@@ -130,6 +130,8 @@ const NbfcDealerDashboardDetails = (props) => {
         return closedLoanFiles;
       case "awaitingApproval":
         return awaitingApprovalFiles;
+      case "dealers":
+        return dataFor === "nbfc" ? Array.from(totalDealers).map(record => ({ partnerId: record, id: record })) : Array.from(totalNbfc).map(record => ({ nbfcId: record, id: record }))
       default:
         return [];
     }
@@ -183,7 +185,13 @@ const NbfcDealerDashboardDetails = (props) => {
     <>
       <div>
         {
-          !props && (
+          !props.name && !props.id && (
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+            {/* <Box mb={3}> */}
+              <Typography variant="h4" className="dashboard-title" gutterBottom>
+                Loan Details 
+              </Typography>
+        {/* </Box> */}
             <Button
               className="back-btn"
               variant="outlined"
@@ -193,19 +201,11 @@ const NbfcDealerDashboardDetails = (props) => {
               to="/dashboard">
               Go back
             </Button>
+                </div>
           )
         }
       </div>
       <div className={styles.dashboard}>
-        {
-          !props && (
-            <Box mb={3}>
-              <Typography variant="h4" className="dashboard-title" gutterBottom>
-                Loan Details 
-              </Typography>
-        </Box>
-          )
-        }
         <Grid container spacing={3}>
           {summaryData.map((data, key) => (
             <Grid item xs={12} sm={6} md={3} key={data.dataType}>

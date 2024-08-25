@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const NbfcDealerDashboardDetailTable = ({ title, data, dataFor }) => {
+  console.log("title: ", title, data, dataFor)
   const navigate = useNavigate()
   const handleConsumerClick = (id) => {
     navigate(`/consumer/${id}`, {state: {fromLoc: window.location.pathname, dataFor}})
@@ -13,7 +14,7 @@ const NbfcDealerDashboardDetailTable = ({ title, data, dataFor }) => {
 
   const nbfcColumns = [
     {
-      field: 'id',
+      field: 'loanId',
       headerName: 'Loan ID',
       width: 120,
       renderCell: (params) => (
@@ -23,11 +24,11 @@ const NbfcDealerDashboardDetailTable = ({ title, data, dataFor }) => {
           sx={{ background: "#dcdcdc" }}
           onClick={() =>
             handleConsumerClick(
-              params.row.id
+              params.row.loanId
             )
           }
         >
-          {params.row.id}
+          {params.row.loanId}
         </Button>
       )
     },
@@ -49,9 +50,23 @@ const NbfcDealerDashboardDetailTable = ({ title, data, dataFor }) => {
     },
   ];
 
+  const totDealerCol = [
+    {
+      field: 'partnerId',
+      headerName: 'Dealer ID',
+      width: 120
+    },
+  ]
+  const totNbfcCol = [
+    {
+      field: 'nbfcId',
+      headerName: 'NBFC ID',
+      width: 120
+    },
+  ]
   const dlrColumns = [
     {
-      field: 'id',
+      field: 'loanId',
       headerName: 'Loan ID',
       width: 120,
       renderCell: (params) => (
@@ -61,11 +76,11 @@ const NbfcDealerDashboardDetailTable = ({ title, data, dataFor }) => {
           sx={{ background: "#dcdcdc" }}
           onClick={() =>
             handleConsumerClick(
-              params.row.id
+              params.row.loanId
             )
           }
         >
-          {params.row.id}
+          {params.row.loanId}
         </Button>
       )
     },
@@ -87,14 +102,22 @@ const NbfcDealerDashboardDetailTable = ({ title, data, dataFor }) => {
     },
   ]
 
+
+
   const generateCol = () => {
     switch (dataFor){
       case "nbfc":
+        if(!title){
+          return totDealerCol
+        }
         return nbfcColumns
       case "dlr":
+        if(!title){
+          return totNbfcCol
+        }
         return dlrColumns
       default: 
-        break
+        return totDealerCol
     }
   }
   return (
