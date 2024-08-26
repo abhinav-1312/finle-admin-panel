@@ -8,7 +8,6 @@ import {
   Divider,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import logo from "./../../assests/images/finle.png";
 import {
   Dashboard,
   PeopleAlt,
@@ -47,10 +46,6 @@ const Sidebar: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <img src={logo} width="65%" height="65" alt="Kodie" />
-      </div>
-
       <Divider />
       <List>
         {userRole.includes(1) && (
