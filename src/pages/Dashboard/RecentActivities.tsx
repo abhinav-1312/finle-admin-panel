@@ -29,14 +29,8 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
   const dlrs = useSelector((state: RootState) => state.dlr.dealerList);
   const dsas = useSelector((state: RootState) => state.dsa.dsaList);
   const staffs = useSelector((state: RootState) => state.staff.staffList);
-  // const activeCustList = useSelector((state: RootState) => state.totActiveCust.activeCustList)
-
-  // const {nbfcLActiveLoanList, nbfcPendingLoanList, nbfcRejectedLoanList} = useSelector((state: RootState) => state.adminDashboard)
 
   const loanDetailList = useSelector((state: RootState) => state.allLoanDetail.allLoanDetailList)
-
-  
-
   let recentActivities: any[] = [];
 
   switch (activeSummaryCard) {
@@ -46,7 +40,6 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
           id: record.nbfcId,
           Name: `${record.firstName}`,
         }))
-        .slice(-10);
       break;
 
     case "dlr":
@@ -55,7 +48,6 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
           id: record.dealerId,
           Name: ` ${record.firstName}`,
         }))
-        .slice(-10);
       break;
 
     case "dsa":
@@ -64,7 +56,6 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
           id: record.dsaId,
           Name: `${record.firstName}`,
         }))
-        .slice(-10);
       break;
 
     case "staff":
@@ -73,7 +64,6 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
           id: record.staffId,
           Name: `${record.firstName}`,
         }))
-        .slice(-10);
       break;
       case "activeCases":
         recentActivities = loanDetailList?.filter((record) => (record.loanStatus === "Active Loan"))?.map((record) => ({id: record.userId, loanId: record.loanId, fullName: record.personalDetails?.name}))
@@ -170,7 +160,7 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
             autoHeight
             initialState={{
               pagination: {
-                paginationModel: { page: 0, pageSize: 10 },
+                paginationModel: { page: 0, pageSize: 20 },
               },
             }}
             pageSizeOptions={[5, 10, 20, 30, 50, 100]}

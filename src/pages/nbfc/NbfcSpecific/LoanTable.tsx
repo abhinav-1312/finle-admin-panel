@@ -77,10 +77,10 @@ const LoanTable: React.FC<LoanTableProps> = ({
     // { field: "loanStatus", headerName: "Loan Status", width: 150 },
     // { field: "remarks", headerName: "Remarks", width: 150 },
     // { field: "createdBy", headerName: "Created By", width: 150 },
-    { field: "createdDate", headerName: "Created Date", width: 150 },
-    { field: "updatedDate", headerName: "Updated Date", width: 150 },
-    { field: "remark", headerName: "Remarks", width: 150,
-      renderCell: (params) => params.row.remarks as string || ""
+    // { field: "createdDate", headerName: "Created Date", width: 150 },
+    // { field: "updatedDate", headerName: "Updated Date", width: 150 },
+    { field: "remark", headerName: "Remarks", width: 350,
+      renderCell: (params) => params.row.remark as string || ""
     },
 
     {

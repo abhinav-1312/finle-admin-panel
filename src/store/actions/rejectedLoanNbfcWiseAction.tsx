@@ -52,8 +52,8 @@ export const fetchRejectedLoan = () => {
 
         loanDetails?.forEach((responseData: any) => {
             const {
-              // csrNbfcApprovedRequestList,
-              // csrNbfcPendingRequestList,
+              csrNbfcApprovedRequestList,
+              csrNbfcPendingRequestList,
               csrNbfcRejectedRequestList,
             } = responseData;
 
@@ -63,11 +63,20 @@ export const fetchRejectedLoan = () => {
               }
               rejectedLoanRemark[record.nbfcId][record.loanId] = record.remarks
             })
-            console.log("REKECYED LOAN REMAKR: ", rejectedLoanRemark)
+            csrNbfcApprovedRequestList?.forEach((record: any) => {
+              if(!rejectedLoanRemark[record.nbfcId]){
+                rejectedLoanRemark[record.nbfcId] = {}
+              }
+              rejectedLoanRemark[record.nbfcId][record.loanId] = record.remarks
+            })
+            csrNbfcPendingRequestList?.forEach((record: any) => {
+              if(!rejectedLoanRemark[record.nbfcId]){
+                rejectedLoanRemark[record.nbfcId] = {}
+              }
+              rejectedLoanRemark[record.nbfcId][record.loanId] = record.remarks
+            })
+            console.log("rejected loan remark: ", rejectedLoanRemark)
             dispatch(fetchRejectedLoanSuccess(rejectedLoanRemark))
-            // activeLoan = [...activeLoan, ...csrNbfcApprovedRequestList];
-            // pendingLoan = [...pendingLoan, ...csrNbfcPendingRequestList];
-            // rejectedLoan = [...rejectedLoan, ...csrNbfcRejectedRequestList];
           });
       }
 

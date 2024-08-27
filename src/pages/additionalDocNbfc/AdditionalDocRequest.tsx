@@ -38,8 +38,6 @@ const AdditionalDocRequest = () => {
       }
     })
 
-    console.log("Add doc: ", additionalDocReqLoan)
-
     if(loanDetailList.length === 0){
       return <h1> Loading...</h1>
     }

@@ -145,7 +145,7 @@ const PersistentDrawerLeft: React.FC<PersistentDrawerLeftProps> = ({ children })
         <Divider />
         <Sidebar />
       </Drawer>
-      <Main open={open}>
+      <Main open={open} sx={{overflow: 'scroll', minHeight: '100vh'}}>
         <DrawerHeader />
         {children}
       </Main>

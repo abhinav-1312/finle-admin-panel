@@ -24,6 +24,9 @@ import {
   approveNbfcLoanApi,
   rejectNbfcLoanApi,
 } from "../../../store/actions/specificNbfcLoanActions";
+import { fetchNBFCs } from "../../../store/actions/nbfcActions";
+import { fetchLoanDetail } from "../../../store/actions/allLoanDetailActions";
+import { fetchRejectedLoan } from "../../../store/actions/rejectedLoanNbfcWiseAction";
 
 interface Loan {
   loanId: string;
@@ -39,27 +42,101 @@ interface Loan {
 const NbfcLoanList: React.FC = () => {
   // const dispatch = useDispatch();
   const dispatch = useDispatch<ThunkDispatch<RootState, null, any>>();
-  const pendingList = useSelector<RootState, Loan[]>(
-    (state) => state.specificNbfcLoan.pendingList
-  );
-  const approvedList = useSelector<RootState, Loan[]>(
-    (state) => state.specificNbfcLoan.approvedList
-  );
-  const rejectedList = useSelector<RootState, Loan[]>(
-    (state) => state.specificNbfcLoan.rejectedList
-  );
+  // const pendingList = useSelector<RootState, Loan[]>(
+  //   (state) => state.specificNbfcLoan.pendingList
+  // );
+  // const approvedList = useSelector<RootState, Loan[]>(
+  //   (state) => state.specificNbfcLoan.approvedList
+  // );
+  // const rejectedList = useSelector<RootState, Loan[]>(
+  //   (state) => state.specificNbfcLoan.rejectedList
+  // );
   const adminList = useSelector<RootState, Loan[]>(
     (state) => state.specificNbfcLoan.adminList
   );
-  const additionalInfoList = useSelector<RootState, Loan[]>(
-    (state) => state.specificNbfcLoan.additionalInfoList
-  );
+  // const additionalInfoList = useSelector<RootState, Loan[]>(
+  //   (state) => state.specificNbfcLoan.additionalInfoList
+  // );
   const [open, setOpen] = useState(false);
   const [nbfcId, setNbfcId] = useState("");
   const [loanId, setLoanId] = useState("");
   const [remarks, setRemarks] = useState("");
   const [actionType, setActionType] = useState<"approve" | "reject" | "additionalInfoReq">("approve");
   const [selectedTab, setSelectedTab] = React.useState(0);
+
+  const userId = localStorage.getItem("userId")
+
+  const rejectedRemarkObj = useSelector((state: RootState) => state.rejectedLoanDetail.rejectedLoanObj)
+    const loanDetailList = useSelector((state: RootState) => state.allLoanDetail.allLoanDetailList)
+    useEffect(() => {
+        const util = async () => {
+            await dispatch(fetchNBFCs())
+            await dispatch(fetchRejectedLoan())
+            dispatch(fetchLoanDetail())
+        }
+        util()
+    }, [dispatch])
+
+    const pendingList: any = []
+    const approvedList: any = []
+    const rejectedList: any = []
+    const additionalInfoList: any = []
+    
+    loanDetailList?.forEach(record => {
+      // incomplete with remark (additional)
+      if(record.loanStatus === "Incomplete"){
+          if(record.nbfcId && record.loanId && record.nbfcId === userId && rejectedRemarkObj[record.nbfcId] && rejectedRemarkObj[record.nbfcId][record.loanId]){
+            additionalInfoList.push(
+              {
+                id: record.userId,
+                userId: record.userId,
+                nbfcId: record.nbfcId,
+                loanId: record.loanId,
+                remark: rejectedRemarkObj[record.nbfcId][record.loanId]
+              }
+            )
+          }
+      }
+
+      // pending request list
+      if(record.loanStatus === "Awaiting Approval" && record.nbfcId === userId){
+        pendingList.push(
+          {
+            id: record.userId,
+            nbfcId: record.nbfcId,
+                userId: record.userId,
+            loanId: record.loanId,
+            remark: rejectedRemarkObj[record.nbfcId][record.loanId]
+          }
+        )
+      }
+
+      // approved request list
+      if(record.loanStatus === "Pending" && record.nbfcId === userId){
+        approvedList.push(
+          {
+            id: record.userId,
+            nbfcId: record.nbfcId,
+            loanId: record.loanId,
+            remark: rejectedRemarkObj[record.nbfcId][record.loanId],
+                userId: record.userId,
+          }
+        )
+      }
+
+      // rejected request list
+      if(record.loanStatus === "Rejected" && record.nbfcId === userId){
+        rejectedList.push(
+          {
+            id: record.userId,
+            nbfcId: record.nbfcId,
+            loanId: record.loanId,
+            remark: rejectedRemarkObj[record.nbfcId][record.loanId],
+            userId: record.userId,
+          }
+        )
+      }
+    })
 
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
