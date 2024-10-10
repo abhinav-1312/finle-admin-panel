@@ -75,10 +75,9 @@ export const fetchRejectedLoan = () => {
               }
               rejectedLoanRemark[record.nbfcId][record.loanId] = record.remarks
             })
-            console.log("rejected loan remark: ", rejectedLoanRemark)
             dispatch(fetchRejectedLoanSuccess(rejectedLoanRemark))
           });
       }
 
     }
-}
+} 

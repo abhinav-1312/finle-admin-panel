@@ -41,7 +41,9 @@ const DealerDocUpload: React.FC = () => {
     const fetchDocumentInfo = async () => {
       try {
         const response = await fetch(
-          `https://finle-api-gateway.azurewebsites.net/user-service/dealerDocuments?userId=${dealerId ? dealerId : (nbfcId ? nbfcId : getUserId)}`,
+          `https://finle-api-gateway.azurewebsites.net/user-service/dealerDocuments?userId=${
+            dealerId ? dealerId : nbfcId ? nbfcId : getUserId
+          }`,
           {
             headers: {
               Authorization: ` ${TOKEN}`,
@@ -51,15 +53,6 @@ const DealerDocUpload: React.FC = () => {
         const data = await response.json();
         if (response.ok) {
           setDocumentInfo(data.responseData);
-
-          // data.responseData.forEach((document: DocumentInfo) => {
-          //   if (document.uploadStatus) {
-          //     downloadDocumentAPI({
-          //       vrfCode: document.vrfCode,
-          //       vrfsCode: document.vrfsCode,
-          //     });
-          //   }
-          // });
         } else {
           console.error("Failed to fetch document info:", data.responseStatus);
         }
@@ -84,8 +77,7 @@ const DealerDocUpload: React.FC = () => {
       });
     };
 
-
-  const [disabledButtons, setDisabledButtons] = useState<boolean[]>([])
+  const [disabledButtons, setDisabledButtons] = useState<boolean[]>([]);
 
   const handleSubmit = async (
     documentType: string,
@@ -93,7 +85,7 @@ const DealerDocUpload: React.FC = () => {
     vrfsCode: string,
     index: number
   ) => {
-    setDisabledButtons(prev => {
+    setDisabledButtons((prev) => {
       const updatedDisabled = [...prev];
       updatedDisabled[index] = true;
       return updatedDisabled;
@@ -119,17 +111,23 @@ const DealerDocUpload: React.FC = () => {
     try {
       const formData = new FormData();
       formData.append("file", file as Blob);
-      formData.append("userId", dealerId ? dealerId : (nbfcId ? nbfcId : getUserId));
+      formData.append(
+        "userId",
+        dealerId ? dealerId : nbfcId ? nbfcId : getUserId
+      );
       formData.append("vrfCode", vrfCode);
       formData.append("vrfsCode", vrfsCode);
 
-      const response = await fetch(`https://finle-api-gateway.azurewebsites.net/user-service/uploadDocument`, {
-        method: "POST",
-        headers: {
-          Authorization: ` ${TOKEN}`,
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        `https://finle-api-gateway.azurewebsites.net/user-service/uploadDocument`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: ` ${TOKEN}`,
+          },
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         console.log(`${documentType} file uploaded successfully`);
@@ -137,7 +135,7 @@ const DealerDocUpload: React.FC = () => {
       } else {
         console.error(`Failed to upload ${documentType} file`);
         alert(`Failed to upload ${documentType} file`);
-        setDisabledButtons(prev => {
+        setDisabledButtons((prev) => {
           const updatedDisabled = [...prev];
           updatedDisabled[index] = false;
           return updatedDisabled;
@@ -145,7 +143,7 @@ const DealerDocUpload: React.FC = () => {
       }
     } catch (error) {
       console.error("Error handling file:", error);
-      setDisabledButtons(prev => {
+      setDisabledButtons((prev) => {
         const updatedDisabled = [...prev];
         updatedDisabled[index] = false;
         return updatedDisabled;
@@ -153,54 +151,19 @@ const DealerDocUpload: React.FC = () => {
     }
   };
 
-  // const downloadDocumentAPI = async ({
-  //   vrfCode,
-  //   vrfsCode,
-  // }: {
-  //   vrfCode: string;
-  //   vrfsCode: string;
-  // }) => {
-  //   try {
-  //     const response = await fetch(
-  //       `/user-service/downloadDocument?userId=${getUserId}&vrfCode=${vrfCode}&vrfsCode=${vrfsCode}`,
-  //       {
-  //         headers: {
-  //           Authorization: ` ${TOKEN}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (response.ok) {
-  //       console.log("Download successful");
-  //     } else {
-  //       console.error("Failed to download document");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error handling download:", error);
-  //   }
-  // };
-
-
-
-
   return (
     <>
       <Typography variant="h4" gutterBottom>
-        {
-          nbfcId ? `NBFC Document Upload for NBFC Id: ${nbfcId}`
-          :
-          `Dealer Doc Upload for Dealer Id: ${dealerId ? dealerId: getUserId}`
-        }
+        {nbfcId
+          ? `NBFC Document Upload for NBFC Id: ${nbfcId}`
+          : `Dealer Doc Upload for Dealer Id: ${
+              dealerId ? dealerId : getUserId
+            }`}
         {/* Dealer Doc Upload */}
       </Typography>
-      <Button
-            variant="outlined"
-            color="warning"
-            component={Link}
-            to="/"
-            >
-            Go back
-          </Button>
+      <Button variant="outlined" color="warning" component={Link} to="/">
+        Go back
+      </Button>
       <Paper elevation={2} style={{ padding: 20, marginTop: 20 }}>
         <Grid container spacing={3}>
           {documentInfo.map((document, index) => (
@@ -226,7 +189,7 @@ const DealerDocUpload: React.FC = () => {
                   )}
               </div>
               <input
-                 // accept=" image/*"
+                // accept=" image/*"
                 accept=".pdf, image/*"
                 style={{ display: "none" }}
                 id={`upload-${document.vrfSName}`}
@@ -242,38 +205,17 @@ const DealerDocUpload: React.FC = () => {
                 <Card style={{ marginTop: 10 }}>
                   {document.uploadStatus ? (
                     <div>
-                 
-                        {/* <CardMedia
-                          component="img"
-                          alt={`${document.vrfSName} Preview`}
-                          style={{
-                            objectFit: "contain",
-                            width: "100%",
-                            height: "300px",
-                          }}
-                          image={`https://fintech-users-service.azurewebsites.net/user-service/downloadDocument?userId=${getUserId}&vrfCode=${document.vrfCode}&vrfsCode=${document.vrfsCode} `}
-                          // onError={handleImageError}
-                        /> */}
+                      <>
+                        <PdfImgViewer
+                          userId={
+                            dealerId ? dealerId : nbfcId ? nbfcId : getUserId
+                          }
+                          vrfCode={document.vrfCode}
+                          vrfsCode={document.vrfsCode}
+                        />
+                      </>
 
-<>
-                  <PdfImgViewer
-                    userId={dealerId ? dealerId : (nbfcId ? nbfcId : getUserId)}
-                    vrfCode={document.vrfCode}
-                    vrfsCode={document.vrfsCode}
-                    />
-                {/* <Button
-                  variant="outlined"
-                  color="primary"
-                  sx={{marginTop: "0.5rem"}}
-                  href={`https://finle-user-service.azurewebsites.net/user-service/downloadDocument?userId=${dealerId ? dealerId : (nbfcId ? nbfcId : getUserId)}&vrfCode=${document.vrfCode}&vrfsCode=${document.vrfsCode} `}
-                  download
-                  >
-                  Download 
-                </Button> */}
-                  </>
-                  
-
-{/*                     
+                      {/*                     
                         <Button
                           variant="contained"
                           color="primary"
@@ -287,7 +229,6 @@ const DealerDocUpload: React.FC = () => {
                         >
                           Download Document
                         </Button> */}
-                   
                     </div>
                   ) : (
                     <div>
@@ -327,37 +268,36 @@ const DealerDocUpload: React.FC = () => {
                   </CardContent>
 
                   <CardActions>
-                    {
-                      (nbfcId || dealerId) &&
-                    <Button
-                    size="medium"
-                    color="error"
-                    variant="outlined"
-                    onClick={() => {
-                      setUploadedFiles((prevFiles) => {
-                        const updatedFiles = { ...prevFiles };
-                        updatedFiles[document.vrfSName] = null;
-                        return updatedFiles;
-                      });
-                      // Optionally, you can update the documentInfo state to set uploadStatus to false
-                      setDocumentInfo((prevDocs) =>
-                        prevDocs.map((doc) =>
-                          doc.vrfSName === document.vrfSName
-                      ? { ...doc, uploadStatus: false }
-                      : doc
-                    )
-                  );
-                  
-                  setDisabledButtons(prev => {
-                    const updatedDisabled = [...prev];
-                    updatedDisabled[index] = false;
-                    return updatedDisabled;
-                  });
-                }}
-                >
-                      Remove
-                    </Button>
-                    }
+                    {(nbfcId || dealerId) && (
+                      <Button
+                        size="medium"
+                        color="error"
+                        variant="outlined"
+                        onClick={() => {
+                          setUploadedFiles((prevFiles) => {
+                            const updatedFiles = { ...prevFiles };
+                            updatedFiles[document.vrfSName] = null;
+                            return updatedFiles;
+                          });
+                          // Optionally, you can update the documentInfo state to set uploadStatus to false
+                          setDocumentInfo((prevDocs) =>
+                            prevDocs.map((doc) =>
+                              doc.vrfSName === document.vrfSName
+                                ? { ...doc, uploadStatus: false }
+                                : doc
+                            )
+                          );
+
+                          setDisabledButtons((prev) => {
+                            const updatedDisabled = [...prev];
+                            updatedDisabled[index] = false;
+                            return updatedDisabled;
+                          });
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    )}
                     {document.uploadStatus ? null : (
                       <Button
                         size="medium"
