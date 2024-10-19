@@ -248,6 +248,19 @@ const Sidebar: React.FC = () => {
             </ListItemButton>
           </ListItem>
         )}
+        {userRole.includes(12) && (
+          <ListItem
+            className={selectedItem === "releaseRequestQueue" ? "highlighted" : ""}
+            onClick={() => handleMenuItemClick("releaseRequestQueue")}
+          >
+            <ListItemButton component={Link} to="/ReleaseRequestQueue">
+              <ListItemIcon>
+                <LocalMall />
+              </ListItemIcon>
+              <ListItemText primary="Release Request Queue" />
+            </ListItemButton>
+          </ListItem>
+        )}
         {/* {userRole.includes(14) && localStorage.getItem("active") === "true" && ( */}
         {userRole.includes(14) && (
           <ListItem

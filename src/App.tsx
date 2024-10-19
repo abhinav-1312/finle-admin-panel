@@ -28,10 +28,15 @@ const App: React.FC = () => {
   }, []);
 
   const logout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("token");
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("mobileNumber");
+    // localStorage.removeItem("userId");
+    // localStorage.removeItem("userRole");
+    // localStorage.removeItem("mobileNumber");
+    // localStorage.removeItem("userType");
+    // localStorage.removeItem("firstName");
+    // localStorage.removeItem("lastName");
+    // localStorage.removeItem("userdetails");
+    // localStorage.removeItem("token");
+    localStorage.clear()
     window.location.reload();
   };
 

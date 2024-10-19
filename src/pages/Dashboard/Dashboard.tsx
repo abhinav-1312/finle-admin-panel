@@ -18,37 +18,33 @@ import RecentActivities from "./RecentActivities";
 import { RootState } from "../../store/store";
 import { ThunkDispatch } from "redux-thunk";
 import SummaryCard from "./SummaryCard";
-import axios from "axios";
-import { BASE_URL, TOKEN } from "../../utils/BaseUrl";
-import { fetchActiveCustomers } from "../../store/actions/totActiveCustActions";
-import { fetchAllNbfcLoanStatus } from "../../store/actions/AdminDashboardAction";
 import { fetchLoanDetail } from "../../store/actions/allLoanDetailActions";
 import { fetchRejectedLoan } from "../../store/actions/rejectedLoanNbfcWiseAction";
 
-interface ActiveCustomers 
-{
-  id: string,
-  userId: string,
-  firstName: string,
-  lastName: string,
-  userType: string,
-  emailId: string,
-  mobileNumber: string,
-  password: string,
-  userMode: string,
-  createdBy: string,
-  createdDate: string,
-  tokenDto: string,
-  loanId: string,
-  addressLineFirst: string,
-  addressLineSecond: string,
-  city: string,
-  state: string,
-  pinCode: string,
-  remarks: string,
-  active: boolean,
-  adminFlag: boolean,
-}
+// interface ActiveCustomers 
+// {
+//   id: string,
+//   userId: string,
+//   firstName: string,
+//   lastName: string,
+//   userType: string,
+//   emailId: string,
+//   mobileNumber: string,
+//   password: string,
+//   userMode: string,
+//   createdBy: string,
+//   createdDate: string,
+//   tokenDto: string,
+//   loanId: string,
+//   addressLineFirst: string,
+//   addressLineSecond: string,
+//   city: string,
+//   state: string,
+//   pinCode: string,
+//   remarks: string,
+//   active: boolean,
+//   adminFlag: boolean,
+// }
 
 const Dashboard: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<RootState, null, any>>();
@@ -87,16 +83,11 @@ const Dashboard: React.FC = () => {
     (state: RootState) => state.dsa.dsaList.length
   );
 
-  // const totActiveCust = useSelector((state: RootState) => state.totActiveCust.activeCustList.length)
-
-  // const {nbfcLActiveLoanList, nbfcPendingLoanList, nbfcRejectedLoanList} = useSelector((state: RootState) => state.adminDashboard)
 
   const totalstaff = useSelector((state: RootState) => state.staff.staffList.length);
   const [activeSummaryCard, setActiveSummaryCard] = useState<string>("nbfc");
 
   const loanDetailList = useSelector((state: RootState) => state.allLoanDetail.allLoanDetailList)
-  // const rejectedLoanDetail = useSelector((state: RootState) => state.rejectedLoanDetail.rejectedLoanObj)
-  // console.log("REJECTED LOAN DETAIL: ", rejectedLoanDetail)
 
   const activeLoanCases = []
   const rejectedLoanCases = []

@@ -21,7 +21,7 @@ import {
   CardContent,
 } from "@mui/material";
 import "./LoanPreview.scss";
-import { BASE_URL, TOKEN } from "../../../utils/BaseUrl";
+import { TOKEN } from "../../../utils/BaseUrl";
 import { Link } from "react-router-dom";
 import { apiCall, convertToDDMMYYYY } from "../../../utils/UtilFunctions";
 import DocumentDrawer from "../../../components/DocumentDrawer";
@@ -83,9 +83,6 @@ const LoanPreview: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState<any>(false);
   const [evScore, setEvScore] = useState<any>(null);
   const [downloadFormat, setDownloadFormat] = useState<string>("html");
-  const [documentPreviews, setDocumentPreviews] = useState<{
-    [key: string]: string | null;
-  }>({});
 
   useEffect(() => {
     fetchLoanDetails();
@@ -103,12 +100,6 @@ const LoanPreview: React.FC = () => {
         userId: userId,
         loanId: loanId,
       };
-
-      // const response = await axios.get(`/user-service/loanDetails`, {
-      //   headers: auth,
-      //   params: queryparams,
-      // });
-
       const loanDetailsUrl = `/user-service/loanDetails?userId=${userId}&loanId=${loanId}`;
       const loanPaymentUrl = `/collection-service/getLoanPaymentDetails?userId=${userId}&loanId=${loanId}`;
 
@@ -121,19 +112,6 @@ const LoanPreview: React.FC = () => {
       const currentDate = new Date();
       const currentYear = currentDate.getUTCFullYear();
       const currentMonth = currentDate.getUTCMonth();
-      // const loanPaymentData = {...loanPaymentDataRes?.responseData,
-      //   loanEmiDetailsDtoList: loanPaymentDataRes?.responseData?.loanEmiDetailsDtoList?.filter((record:any) =>{
-      //     const paymentDate = new Date(record.loanEmiPaymentDate);
-      //     const paymentYear = paymentDate.getUTCFullYear();
-      //     const paymentMonth = paymentDate.getUTCMonth();
-
-      //     // Check if the payment year is less than or equal to the current year
-      //     // and the payment month is less than or equal to the current month if the year is the same
-      //     return (paymentYear < currentYear) ||
-      //           (paymentYear === currentYear && paymentMonth <= currentMonth);
-
-      //     })
-      //   }
 
       const loanPaymentData = {
         ...loanPaymentDataRes?.responseData,
@@ -163,9 +141,6 @@ const LoanPreview: React.FC = () => {
       setLoanDetails(loanDetailsRes.responseData);
       console.log("setign loan payment");
       setLoanPayment({ ...loanPaymentData });
-      // fetchDocumentPreviews(
-      //   loanDetailsRes.responseData.documentDetails.uploadedDocDetailsDtoList
-      // );
     } catch (error) {
       console.error(error);
     }
@@ -187,45 +162,6 @@ const LoanPreview: React.FC = () => {
       console.error(error);
     }
   };
-
-  // const fetchDocumentPreviews = async (documents: any[]) => {
-  //   if (!documents) {
-  //     return;
-  //   }
-  //   try {
-  //     for (const doc of documents) {
-  //       const token = localStorage.getItem("token");
-  //       const auth = {
-  //         Authorization: token,
-  //       };
-
-  //       const response = await axios.get(`/user-service/downloadDocument`, {
-  //         headers: auth,
-  //         params: {
-  //           userId: userId,
-  //           vrfCode: doc.vrfCode,
-  //           vrfsCode: doc.vrfsCode,
-  //         },
-  //         responseType: "blob",
-  //       });
-
-  //       if (response.status === 200) {
-  //         const documentBlob = new Blob([response.data], {
-  //           type: "application/pdf",
-  //         });
-  //         const documentUrl = URL.createObjectURL(documentBlob);
-  //         setDocumentPreviews((prevPreviews) => ({
-  //           ...prevPreviews,
-  //           [doc.docName]: documentUrl,
-  //         }));
-  //       } else {
-  //         console.error("Document download failed:", response.status);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching document previews:", error);
-  //   }
-  // };
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -487,16 +423,6 @@ const LoanPreview: React.FC = () => {
           </div>
           <div className="buttons-container hide-comp">
             <Button onClick={handlePrint}>Print</Button>
-            {/* <select
-              value={downloadFormat}
-              onChange={(e) => setDownloadFormat(e.target.value)}
-            >
-              <option value="html">HTML</option>
-              <option value="pdf">PDF</option>
-              <option value="png">PNG</option>
-              <option value="jpeg">JPEG</option>
-            </select>
-            <Button onClick={handleDownload}>Download</Button> */}
           </div>
           <div className="nbfcEvscore">
             {" "}
@@ -565,12 +491,6 @@ const LoanPreview: React.FC = () => {
                 rows={loanPayment?.loanEmiDetailsDtoList || []}
                 columns={loanPaymentColums}
                 autoHeight
-                // initialState={{
-                //   pagination: {
-                //     paginationModel: { page: 0, pageSize: 10 },
-                //   },
-                // }}
-                // pageSizeOptions={[5, 10, 20, 30, 50, 100]}
               />
             </Box>
 
@@ -603,33 +523,6 @@ const LoanPreview: React.FC = () => {
                 {!loanDetails?.documentDetails?.uploadedDocDetailsDtoList && (
                   <h3 className="field"> No documents uploaded</h3>
                 )}
-                {/* {loanDetails?.documentDetails?.uploadedDocDetailsDtoList?.map(
-                  (doc: any, index: number) => (
-                    <Grid item xs={6} key={index}>
-                      <Box>
-                        <Typography variant="body1" component="span">
-                          {doc.docName}:
-                        </Typography>
-                      </Box>
-
-                      <Box className="field">
-                        {documentPreviews[doc.docName] && (
-                          <div className="document-preview">
-                            <Typography variant="body2" component="span">
-                              <img
-                                src={documentPreviews[doc.docName] || ""}
-                                alt="Document Preview"
-                                width="300"
-                                height="200"
-                              />
-                            </Typography>
-                          </div>
-                        )}
-                      </Box>
-
-                    </Grid>
-                  )
-                )} */}
               </Grid>
             </Box>
                 <DocumentDrawer docData={loanDetails?.documentDetails?.uploadedDocDetailsDtoList} userId={userId} downloadOptionEnabled={false} />

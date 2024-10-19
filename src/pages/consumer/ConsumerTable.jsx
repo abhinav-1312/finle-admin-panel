@@ -70,7 +70,6 @@ const ConsumerTable = () => {
   }
 
   const editConsumer = (obj) => {
-    console.log("Obj: ", obj)
     setConsumerFormData({...obj, email: obj.emailId, category: obj.userType})
     setModalOpen(true)
   }
@@ -150,7 +149,6 @@ const ConsumerTable = () => {
       delete consumerFormData['active']
       delete consumerFormData['adminFlag']
   
-      console.log("Consumer form data submit: ", consumerFormData)
       const url = "https://finle-user-service.azurewebsites.net/user-service/updateUser"
       try{
         await axios.post(url, consumerFormData)

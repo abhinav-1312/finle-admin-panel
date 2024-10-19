@@ -78,6 +78,12 @@ const DealerTable: React.FC<DealerTableProps> = ({
     { field: "lang", headerName: "Lang", width: 120 },
     { field: "isActive", headerName: "isActive", width: 120 },
     {
+      field: "outlet", headerName: "Browse Outlets", width: 200,
+      renderCell: (params) => (
+        <Button variant="contained" onClick={()=> navigate(`/dealer/outlets/${params.row.dealerId}`)}> Browse outlets </Button>
+      )
+    },
+    {
       field: "actions",
       headerName: "Action",
       width: 200,

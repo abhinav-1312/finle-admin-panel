@@ -36,6 +36,8 @@ import DealerDetail from "../pages/dealer/DealerDetail";
 import NbfcDashboardDetails from "../pages/Dashboard/NbfcDealerDashboardDetails";
 import AdditionalDocRequest from "../pages/additionalDocNbfc/AdditionalDocRequest";
 import AddDocConsumer from "../pages/additionalDocNbfc/AddDocUpload";
+import DealerOutlet from "../pages/dealer/dealerOutlet/DealerOutlet";
+import ReleaseRequestQueue from "../pages/nbfc/NbfcSpecific/ReleaseRequestQueue";
 // import { RouteComponentProps } from 'react-router-dom';
 
 interface LocationState {
@@ -143,6 +145,10 @@ const AppRoutes: React.FC = () => {
           element={userRole.includes(4) ? <ManageDealer /> : <PrivatePage />}
         />
         <Route
+          path="/dealer/outlets/:dealerId"
+          element={userRole.includes(4) ? <DealerOutlet /> : <PrivatePage />}
+        />
+        <Route
           path="/dsa"
           element={userRole.includes(5) ? <ManageDSA /> : <PrivatePage />}
         />
@@ -181,6 +187,12 @@ const AppRoutes: React.FC = () => {
           path="/NbfcLoanDetails"
           element={
             userRole.includes(12) ? <NbfcLoanDetails /> : <PrivatePage />
+          }
+        />
+        <Route
+          path="/ReleaseRequestQueue"
+          element={
+            userRole.includes(12) ? <ReleaseRequestQueue /> : <PrivatePage />
           }
         />
         <Route

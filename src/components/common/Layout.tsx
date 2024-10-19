@@ -84,10 +84,7 @@ const PersistentDrawerLeft: React.FC<PersistentDrawerLeftProps> = ({ children })
   };
 
   const Logout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("token");
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("mobileNumber");
+    localStorage.clear();
     window.location.reload();
   };
   const firstName = localStorage.getItem("firstName");

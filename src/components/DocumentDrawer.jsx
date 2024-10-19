@@ -20,7 +20,6 @@ const BlankImage = () => {
   };
 
 const DocumentDrawer = ({docData,  userId, downloadOptionEnabled}) => {
-    console.log("doc data: ", docData, userId)
   return (
     <div
           style={{
