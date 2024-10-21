@@ -19,6 +19,7 @@ import { Add } from "@mui/icons-material";
 import { Ragt } from "./RagtInterface";
 import RagtForm from "./RagtForm";
 import RagtTable from "./RagtTable";
+import { userVerified } from "../../utils/UtilFunctions";
 
 const RagtManagement: React.FC = () => {
   const [RagtList, setRagtList] = useState<Ragt[]>([]);
@@ -87,18 +88,25 @@ const RagtManagement: React.FC = () => {
   };
 
   const deleteRagtItem = async (RagtId: number) => {
-    setRagtList((prevList) => prevList.filter((ragt) => ragt.Id !== RagtId));
+    const isVerified = await userVerified();
+    if(isVerified){
+      setRagtList((prevList) => prevList.filter((ragt) => ragt.Id !== RagtId));
+    }
   };
 
   const toggleRagtStatus = async (RagtId: number, status: "block" | "unblock") => {
-    setRagtList((prevList) =>
-      prevList.map((ragt) => {
-        if (ragt.Id === RagtId) {
-          return { ...ragt, Flag: status === "block" ? "Blocked" : "Active" };
-        }
-        return ragt;
-      })
-    );
+    const isVerified = await userVerified();
+    if(isVerified){
+
+      setRagtList((prevList) =>
+        prevList.map((ragt) => {
+          if (ragt.Id === RagtId) {
+            return { ...ragt, Flag: status === "block" ? "Blocked" : "Active" };
+          }
+          return ragt;
+        })
+      );
+    }
   };
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -116,15 +124,19 @@ const RagtManagement: React.FC = () => {
   };
 
   const handleFormSubmit = async (ragt: Ragt) => {
-    if (RagtFormData === null) {
-      ragt.Id = RagtList.length + 1; // Assign a unique ID for the dummy data
-      setRagtList((prevList) => [...prevList, ragt]);
-    } else {
-      setRagtList((prevList) =>
-        prevList.map((item) =>
-          item.Id === ragt.Id ? { ...ragt, Flag: item.Flag } : item
-        )
-      );
+    const isVerified = await userVerified();
+    if(isVerified){
+
+      if (RagtFormData === null) {
+        ragt.Id = RagtList.length + 1; // Assign a unique ID for the dummy data
+        setRagtList((prevList) => [...prevList, ragt]);
+      } else {
+        setRagtList((prevList) =>
+          prevList.map((item) =>
+            item.Id === ragt.Id ? { ...ragt, Flag: item.Flag } : item
+      )
+    );
+  }
     }
     setIsModalOpen(false);
   };

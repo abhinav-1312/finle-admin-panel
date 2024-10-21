@@ -28,6 +28,7 @@ import {
 import NBFCForm from "./NbfcForm";
 import NBFCTable from "./NbfcTable";
 import { RootState } from "../../store/store";
+import { userVerified } from "../../utils/UtilFunctions";
 
 const NBFCManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -36,7 +37,6 @@ const NBFCManagement: React.FC = () => {
 
   const dispatch = useDispatch<ThunkDispatch<RootState, null, any>>();
   const nbfcList = useSelector((state: RootState) => state.nbfc.nbfcList);
-
   useEffect(() => {
     dispatch(fetchNBFCs());
   }, [dispatch]);
@@ -52,19 +52,26 @@ const NBFCManagement: React.FC = () => {
   };
 
   const deleteNBFCItem = async (nbfc: NBFC) => {
-    try {
-      await dispatch(deleteNBFC(nbfc));
-    } catch (error) {
-      console.error(error);
+    const isVerified = await userVerified();
+    if (isVerified) {
+      try {
+        await dispatch(deleteNBFC(nbfc));
+      } catch (error) {
+        alert("Error occured while deleting NBFC.");
+        console.error(error);
+      }
     }
   };
 
   const handleToggleNBFCStatus = async (nbfc: NBFC) => {
-    try {
-      await dispatch(toggleNBFCStatus(nbfc));
-      dispatch(fetchNBFCs());
-    } catch (error) {
-      console.error(error);
+    const isVerified = await userVerified();
+    if(isVerified){
+      try {
+        await dispatch(toggleNBFCStatus(nbfc));
+        dispatch(fetchNBFCs());
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -72,27 +79,27 @@ const NBFCManagement: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  // const handleModalOpen = () => {
-  //   setIsModalOpen(true);
-  // };
-
   const handleModalClose = () => {
     setIsModalOpen(false);
     setNBFCFormData(null);
   };
 
-  const handleFormSubmit = async (nbfc: NBFC) => {
-    try {
-      if (nbfcFormData === null) {
-        await dispatch(addNBFC(nbfc));
-        dispatch(fetchNBFCs());
-      } else {
-        await dispatch(updateNBFC(nbfc));
-        dispatch(fetchNBFCs());
+  const handleFormSubmit = async (formValues: any) => {
+    const isVerified = await userVerified();
+    if (isVerified) {
+      try {
+        if (nbfcFormData === null) {
+          await dispatch(addNBFC(formValues));
+          dispatch(fetchNBFCs());
+        } else {
+          await dispatch(updateNBFC(formValues));
+          dispatch(fetchNBFCs());
+        }
+        setIsModalOpen(false);
+      } catch (error) {
+        alert("Error submitting data.");
+        console.error(error);
       }
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error(error);
     }
   };
 

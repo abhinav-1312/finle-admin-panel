@@ -29,6 +29,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../store/store";
 import DealerForm from "./DealerForm";
 import DealerTable from "./DealerTable";
+import { userVerified } from "../../utils/UtilFunctions";
 
 const DealerManagement: React.FC = () => {
   // const [DlrList, setDealerList] = useState<Dealer[]>([]);
@@ -54,19 +55,26 @@ const DealerManagement: React.FC = () => {
   };
 
   const deleteDealerItem = async (dealer: Dealer) => {
-    try {
-      await dispatch(deleteDealer(dealer));
-    } catch (error) {
-      console.error(error);
+    const isVerified = await userVerified();
+    if(isVerified){
+      try {
+        await dispatch(deleteDealer(dealer));
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
   const handleToggleDealerStatus = async (dealer: Dealer) => {
-    try {
-      await dispatch(toggleDealerStatus(dealer));
-      dispatch(fetchDealers());
-    } catch (error) {
-      console.error(error);
+    const isVerified = await userVerified();
+    if(isVerified){
+
+      try {
+        await dispatch(toggleDealerStatus(dealer));
+        dispatch(fetchDealers());
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -84,17 +92,20 @@ const DealerManagement: React.FC = () => {
   };
 
   const handleFormSubmit = async (dealer: Dealer) => {
-    try {
-      if (DlrFormData === null) {
-        await dispatch(addDealer(dealer));
-        dispatch(fetchDealers());
-      } else {
-        await dispatch(updateDealer(dealer));
-        dispatch(fetchDealers());
+    const isVerified = await userVerified();
+    if(isVerified){
+      try {
+        if (DlrFormData === null) {
+          await dispatch(addDealer(dealer));
+          dispatch(fetchDealers());
+        } else {
+          await dispatch(updateDealer(dealer));
+          dispatch(fetchDealers());
+        }
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error(error);
       }
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error(error);
     }
   };
 

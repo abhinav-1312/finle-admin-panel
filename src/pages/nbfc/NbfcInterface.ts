@@ -21,4 +21,5 @@ export interface NBFC {
   lat: number;
   lng: number;
   isActive: string;
+  password: string;
 }

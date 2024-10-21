@@ -10,11 +10,10 @@ import { NBFC } from "./NbfcInterface";
 
 interface NBFCFormProps {
   nbfc: NBFC | null;
-  onSubmit: (nbfc: NBFC) => void;
+  onSubmit: (values: NBFC) => void;
 }
 
 const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
-  console.log("NBFC: ", nbfc)
   const [formValues, setFormValues] = useState<NBFC>({
     nbfcId: nbfc ? nbfc.nbfcId : "",
     firstName: nbfc ? nbfc.firstName : "",
@@ -31,6 +30,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
     lat: nbfc ? nbfc.lat : 0,
     lng: nbfc ? nbfc.lng : 0,
     isActive: nbfc ? nbfc.isActive : "",
+    password: ""
   });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -40,20 +40,21 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const isConfirmed = window.confirm('Are you sure you want to perform the action?');
-    if(isConfirmed)
-      onSubmit(formValues);
+    // const isConfirmed = window.confirm('Are you sure you want to perform the action?');
+    // if(isConfirmed)
+      // onSubmit(formValues);
+    onSubmit(formValues)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="dsa-form-component">
+    <form onSubmit={handleSubmit} className="dsa-form-component" style={{position: "relative"}}>
       <TextField
         label="NBFC ID"
         variant="outlined"
         size="small"
         name="nbfcId"
         disabled
-        value={formValues.nbfcId}
+        value={formValues?.nbfcId}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -63,7 +64,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         variant="outlined"
         size="small"
         name="firstName"
-        value={formValues.firstName}
+        value={formValues?.firstName}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -72,7 +73,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         variant="outlined"
         size="small"
         name="lastName"
-        value={formValues.lastName}
+        value={formValues?.lastName}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -81,7 +82,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         variant="outlined"
         size="small"
         name="mgrName"
-        value={formValues.mgrName}
+        value={formValues?.mgrName}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -90,7 +91,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         variant="outlined"
         size="small"
         name="addressLineFirst"
-        value={formValues.addressLineFirst}
+        value={formValues?.addressLineFirst}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -99,7 +100,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         variant="outlined"
         size="small"
         name="addressLineSecond"
-        value={formValues.addressLineSecond}
+        value={formValues?.addressLineSecond}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -108,7 +109,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         variant="outlined"
         size="small"
         name="city"
-        value={formValues.city}
+        value={formValues?.city}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -117,7 +118,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         variant="outlined"
         size="small"
         name="state"
-        value={formValues.state}
+        value={formValues?.state}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -126,7 +127,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         variant="outlined"
         size="small"
         name="pinCode"
-        value={formValues.pinCode}
+        value={formValues?.pinCode}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -137,11 +138,11 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
           variant="outlined"
           size="small"
           name="mobile"
-          value={formValues.mobile}
+          value={formValues?.mobile}
           onChange={handleChange}
           className="dsa-form-input"
         />
-        {formValues.mobile && !/^\d{10}$/.test(formValues.mobile) && (
+        {formValues?.mobile && !/^\d{10}$/.test(formValues.mobile) && (
           <Typography variant="subtitle2" sx={{color:'red'}}>
             Please enter a valid 10-digit mobile number.
           </Typography>
@@ -152,7 +153,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         variant="outlined"
         size="small"
         name="phone"
-        value={formValues.phone}
+        value={formValues?.phone}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -167,7 +168,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         size="small"
         name="email"
         required
-        value={formValues.email}
+        value={formValues?.email}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -177,7 +178,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         size="small"
         name="lat"
         type="number"
-        value={formValues.lat}
+        value={formValues?.lat}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -187,7 +188,7 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         size="small"
         name="lng"
         type="number"
-        value={formValues.lng}
+        value={formValues?.lng}
         onChange={handleChange}
         className="dsa-form-input"
       />
@@ -197,18 +198,30 @@ const NBFCForm: React.FC<NBFCFormProps> = ({ nbfc, onSubmit }) => {
         size="small"
         name="isActive"
         select // Use select to render it as a dropdown
-        value={formValues.isActive}
+        value={formValues?.isActive}
         onChange={handleChange}
         className="dsa-form-input"
       >
         <MenuItem value="Y">Yes</MenuItem>
         <MenuItem value="N">No</MenuItem>
       </TextField>
+      <TextField
+        label="Enter Password to Authenticate"
+        variant="outlined"
+        size="small"
+        name="password"
+        type="text"
+        value={formValues?.password}
+        onChange={handleChange}
+        className="dsa-form-input"
+        required
+      />
 
       <Button
         type="submit"
         variant="contained"
         className="dsa-form-submit-button"
+        style={{position: "absolute", right: 0, bottom: "-1rem"}}
       >
         {nbfc ? "Update" : "Add"}
       </Button>

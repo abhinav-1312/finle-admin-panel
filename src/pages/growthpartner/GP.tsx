@@ -29,6 +29,7 @@ import {
   deleteGP,
   toggleGPStatus,
 } from "../../store/actions/gpActions";
+import { userVerified } from "../../utils/UtilFunctions";
 
 const GPManagement: React.FC = () => {
   // const [gpList, setGpList] = useState<GP[]>([]);
@@ -54,19 +55,27 @@ const GPManagement: React.FC = () => {
   };
 
   const deleteGpItem = async (gp: GP) => {
-    try {
-      await dispatch(deleteGP(gp));
-    } catch (error) {
-      console.error(error);
+    const isVerified = await userVerified();
+    if(isVerified){
+
+      try {
+        await dispatch(deleteGP(gp));
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
   const handleToggleGPStatus = async (gp: GP) => {
-    try {
-      await dispatch(toggleGPStatus(gp));
-      dispatch(fetchGPs());
-    } catch (error) {
-      console.error(error);
+    const isVerified = await userVerified();
+    if(isVerified){
+
+      try {
+        await dispatch(toggleGPStatus(gp));
+        dispatch(fetchGPs());
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -84,17 +93,21 @@ const GPManagement: React.FC = () => {
   };
 
   const handleFormSubmit = async (gp: GP) => {
-    try {
-      if (gpFormData === null) {
-        await dispatch(addGP(gp));
-        dispatch(fetchGPs());
-      } else {
-        await dispatch(updateGP(gp));
-        dispatch(fetchGPs());
+    const isVerified = await userVerified();
+    if(isVerified){
+
+      try {
+        if (gpFormData === null) {
+          await dispatch(addGP(gp));
+          dispatch(fetchGPs());
+        } else {
+          await dispatch(updateGP(gp));
+          dispatch(fetchGPs());
+        }
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error(error);
       }
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error(error);
     }
   };
 

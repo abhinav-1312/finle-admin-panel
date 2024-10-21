@@ -37,7 +37,6 @@ const NBFCTable: React.FC<NBFCTableProps> = ({
   }
 
   const handleAdditionalDocUpload = (nbfc: NBFC) => {
-    console.log("Additional doc clicked nbfc: ", nbfc)
     const {nbfcId} = nbfc
     navigate('/nbfc-doc-upload', {state: {nbfcId}})
   }

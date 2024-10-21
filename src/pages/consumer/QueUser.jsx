@@ -6,10 +6,19 @@ sharing or distribution without prior written consent from the copyright holder<
 
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { BASE_URL, TOKEN } from "../../utils/BaseUrl";
-import { Card, CardContent, TextField, Button, Tabs, Tab, Stack } from "@mui/material";
+import { TOKEN } from "../../utils/BaseUrl";
+import {
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Tabs,
+  Tab,
+  Stack,
+} from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { userVerified } from "../../utils/UtilFunctions";
 
 const QueUser = () => {
   const [users, setUsers] = useState([]);
@@ -25,113 +34,130 @@ const QueUser = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.post(`/user-service/getAllUserDetails`, {}, {
-        headers: {
-          Authorization: TOKEN,
-        },
-      });
+      const response = await axios.post(
+        `/user-service/getAllUserDetails`,
+        {},
+        {
+          headers: {
+            Authorization: TOKEN,
+          },
+        }
+      );
 
       if (response.status === 200) {
         const allUsers = response.data.responseData;
-        const csrUsers = allUsers.filter((user) => user.userType !== "CSR").reverse();
+        const csrUsers = allUsers
+          .filter((user) => user.userType !== "CSR")
+          .reverse();
         setUsers(csrUsers);
-
       } else {
-        console.error("Failed to fetch data:", response.status, response.statusText);
+        console.error(
+          "Failed to fetch data:",
+          response.status,
+          response.statusText
+        );
       }
     } catch (error) {
       console.error("Error during data fetch:", error);
     }
   };
 
-  const [approveBtnEnabled, setApproveBtnEnabled] = useState(true)
-  const [rejBtnEnabled, setRejBtnEnabled] = useState(true)
-
-  console.log("Users: ", users)
+  const [approveBtnEnabled, setApproveBtnEnabled] = useState(true);
+  const [rejBtnEnabled, setRejBtnEnabled] = useState(true);
 
   const handleApprove = async (userId, userType) => {
-    setApproveBtnEnabled(false)
-    try {
-      const userRemarks = prompt("Enter remarks:");
-      if (userRemarks !== null) {
-        const response = await axios.post(
-          `/admin-service/approve`,
-          {
-
-            remarks: userRemarks,
-            userId: userId,
-            userType: userType,
-
-          },
-          {
-            headers: {
-              Authorization: TOKEN,
-              'Content-Type': 'application/json',
+    setApproveBtnEnabled(false);
+    const isVerified = await userVerified();
+    if (isVerified) {
+      try {
+        const userRemarks = prompt("Enter remarks:");
+        if (userRemarks !== null) {
+          const response = await axios.post(
+            `/admin-service/approve`,
+            {
+              remarks: userRemarks,
+              userId: userId,
+              userType: userType,
             },
+            {
+              headers: {
+                Authorization: TOKEN,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (response.status === 200) {
+            alert("Approved successfully");
+            setApproveBtnEnabled(true);
+            fetchUsers();
+          } else {
+            console.log(
+              "Failed to approve user:",
+              response.status,
+              response.statusText
+            );
+            setApproveBtnEnabled(true);
           }
-        );
-
-
-
-        if (response.status === 200) {
-          alert("Approved successfully");
-          console.log("Approval successful");
-          setApproveBtnEnabled(true)
-          fetchUsers()
-        } else {
-          console.log("Failed to approve user:", response.status, response.statusText);
-          setApproveBtnEnabled(true)
         }
+      } catch (error) {
+        console.error("Error during approval:", error);
+        setApproveBtnEnabled(true);
       }
-    } catch (error) {
-      console.error("Error during approval:", error);
-      setApproveBtnEnabled(true)
+    } else {
+      setApproveBtnEnabled(true);
     }
   };
 
   const handleReject = async (userId, userType) => {
-    setRejBtnEnabled(false)
-    try {
-      const userRemarks = prompt("Enter remarks:");
-      console.log("SER REMSRK: ", userRemarks !== '')
+    setRejBtnEnabled(false);
 
-      if(userRemarks === ''){
-        alert("Please enter remark to continue.")
-        return
-      }
+    const isVerified = await userVerified();
+    if (isVerified) {
+      try {
+        const userRemarks = prompt("Enter remarks:");
+        console.log("SER REMSRK: ", userRemarks !== "");
+
+        if (userRemarks === "") {
+          alert("Please enter remark to continue.");
+          return;
+        }
 
         const response = await axios.post(
           `/admin-service/reject`,
           {
-
             remarks: userRemarks,
             userId: userId,
             userType: userType,
-
           },
           {
             headers: {
               Authorization: TOKEN,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           }
-
         );
 
         if (response.status === 200) {
           alert("Reject successfully");
-          setRejBtnEnabled(true)
-          fetchUsers()
+          setRejBtnEnabled(true);
+          fetchUsers();
         } else {
-          console.log("Failed to Reject user:", response.status, response.statusText);
-          setRejBtnEnabled(true)
+          console.log(
+            "Failed to Reject user:",
+            response.status,
+            response.statusText
+          );
+          setRejBtnEnabled(true);
         }
-    } catch (error) {
-      console.error("Error during Reject:", error);
-      setRejBtnEnabled(true)
-    }
-    finally{
-      setRejBtnEnabled(true)
+      } catch (error) {
+        console.error("Error during Reject:", error);
+        setRejBtnEnabled(true);
+      } finally {
+        setRejBtnEnabled(true);
+      }
+    } else {
+      setRejBtnEnabled(true);
     }
   };
 
@@ -141,13 +167,13 @@ const QueUser = () => {
 
   const filteredUsers = searchTerm
     ? users.filter((user) =>
-      Object.values(user).some(
-        (value) =>
-          value &&
-          typeof value === "string" &&
-          value.toLowerCase().includes(searchTerm.toLowerCase())
+        Object.values(user).some(
+          (value) =>
+            value &&
+            typeof value === "string" &&
+            value.toLowerCase().includes(searchTerm.toLowerCase())
+        )
       )
-    )
     : users;
 
   const navigate = useNavigate();
@@ -158,16 +184,15 @@ const QueUser = () => {
 
   const columns = [
     {
-      field: "userId", headerName: "User ID", width: 150, renderCell: (params) => (
+      field: "userId",
+      headerName: "User ID",
+      width: 150,
+      renderCell: (params) => (
         <Button
           variant="text"
           color="inherit"
           sx={{ background: "#dcdcdc" }}
-          onClick={() =>
-            handleUserDetailClick(
-              params.row.userId
-            )
-          }
+          onClick={() => handleUserDetailClick(params.row.userId)}
         >
           {params.row.userId}
         </Button>
@@ -184,9 +209,7 @@ const QueUser = () => {
       headerName: "Status",
       width: 120,
       renderCell: (params) => (
-        <span>
-          {params.row.active ? "Approved" : "Pending"}
-        </span>
+        <span>{params.row.active ? "Approved" : "Pending"}</span>
       ),
     },
 
@@ -200,7 +223,9 @@ const QueUser = () => {
             <Button
               variant="contained"
               color="success"
-              onClick={() => handleApprove(params.row.userId, params.row.userType)}
+              onClick={() =>
+                handleApprove(params.row.userId, params.row.userType)
+              }
               disabled={!approveBtnEnabled}
             >
               Approve
@@ -210,7 +235,9 @@ const QueUser = () => {
             <Button
               variant="contained"
               color="warning"
-              onClick={() => handleReject(params.row.userId, params.row.userType)}
+              onClick={() =>
+                handleReject(params.row.userId, params.row.userType)
+              }
               disabled={!rejBtnEnabled}
             >
               Reject
@@ -221,11 +248,11 @@ const QueUser = () => {
     },
   ];
 
-  const pendingUsers = filteredUsers.filter((user) => !user.active && user.remarks === null);
-  const blacklistedUsers = filteredUsers.filter((user) => !user.active && user.remarks !== null);
+  const pendingUsers = filteredUsers.filter(
+    (user) => !user.active && user.remarks === null
+  );
+
   const approvedUsers = filteredUsers.filter((user) => user.active);
-
-
 
   return (
     <>
@@ -233,13 +260,11 @@ const QueUser = () => {
       <Tabs value={selectedTab} onChange={handleTabChange}>
         <Tab label="Pending Users" />
         <Tab label="Approved Users" />
-        {/* <Tab label="Blacklisted Users" /> */}
       </Tabs>
       <br />
 
       <Card>
         <CardContent>
-
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <TextField
               label="Search user"
@@ -262,7 +287,7 @@ const QueUser = () => {
                 }}
                 getRowId={(row) => Math.random() * filteredUsers.length}
                 // autoHeight
-                style={{ maxHeight: '700px !important' }}
+                style={{ maxHeight: "700px !important" }}
                 pageSizeOptions={[5, 10, 20, 30, 50, 100]}
                 // checkboxSelection
                 disableRowSelectionOnClick
@@ -285,7 +310,7 @@ const QueUser = () => {
                 }}
                 getRowId={(row) => Math.random() * filteredUsers.length}
                 // autoHeight
-                style={{ maxHeight: '700px !important' }}
+                style={{ maxHeight: "700px !important" }}
                 pageSizeOptions={[5, 10, 20, 30, 50, 100]}
                 // checkboxSelection
                 disableRowSelectionOnClick
@@ -295,28 +320,6 @@ const QueUser = () => {
               />
             </div>
           )}
-          {/* {selectedTab === 2 && (
-            <div style={{ height: "700px", width: "100%" }}>
-              <DataGrid
-                rows={blacklistedUsers}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 10 },
-                  },
-                }}
-                getRowId={(row) => Math.random() * filteredUsers.length}
-                // autoHeight
-                style={{ maxHeight: '700px !important' }}
-                pageSizeOptions={[5, 10, 20, 30, 50, 100]}
-                // checkboxSelection
-                disableRowSelectionOnClick
-                components={{
-                  Toolbar: GridToolbar,
-                }}
-              />
-            </div>
-          )} */}
         </CardContent>
       </Card>
     </>
